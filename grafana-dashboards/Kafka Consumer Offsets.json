@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "iteration": 1657037459198,
+  "iteration": 1657042504572,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -181,7 +181,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "max(((vectorized_kafka_group_offset{topic=~\"[[topic]]\", group=~\"[[group]]\"}) - on(instance, topic, partition) group_left vectorized_cluster_partition_end_offset{topic=~\"[[topic]]\"}) * -1    ) by ([[aggr_criteria]], group)",
+          "expr": "max(((vectorized_kafka_group_offset{topic=~\"[[topic]]\", group=~\"[[group]]\"}) - on(instance, topic, partition) group_left vectorized_cluster_partition_end_offset{topic=~\"[[topic]]\"}) * -1    ) ",
           "interval": "",
           "legendFormat": "group: {{group}}, topic: {{topic}}, partition: {{partition}}",
           "range": true,
@@ -1146,13 +1146,13 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Kafka Consumer Offsets",
   "uid": "rtW0EDenk",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
