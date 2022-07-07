@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "iteration": 1657106951851,
+  "iteration": 1657106951855,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -39,23 +39,6 @@
         "w": 24,
         "x": 0,
         "y": 0
-      },
-      "id": 165,
-      "panels": [],
-      "title": "Info",
-      "type": "row"
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 1
       },
       "id": 146,
       "panels": [],
@@ -72,7 +55,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 2
+        "y": 1
       },
       "id": 1,
       "options": {
@@ -127,7 +110,7 @@
         "h": 8,
         "w": 4,
         "x": 0,
-        "y": 4
+        "y": 3
       },
       "id": 2,
       "links": [],
@@ -208,7 +191,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-YlBl"
+            "mode": "continuous-greens"
           },
           "mappings": [],
           "thresholds": {
@@ -228,7 +211,7 @@
         "h": 8,
         "w": 4,
         "x": 4,
-        "y": 4
+        "y": 3
       },
       "id": 23763572006,
       "options": {
@@ -301,7 +284,7 @@
         "h": 8,
         "w": 4,
         "x": 8,
-        "y": 4
+        "y": 3
       },
       "id": 3,
       "links": [],
@@ -342,7 +325,83 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 12,
+        "y": 3
+      },
+      "id": 23763572028,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "count(count by (topic) (vectorized_storage_log_partition_size{namespace=\"kafka\"}))",
+          "interval": "",
+          "legendFormat": "Partition count",
+          "refId": "A"
+        }
+      ],
+      "title": "Topics",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
       },
       "fieldConfig": {
         "defaults": {
@@ -371,8 +430,8 @@
       "gridPos": {
         "h": 8,
         "w": 4,
-        "x": 12,
-        "y": 4
+        "x": 16,
+        "y": 3
       },
       "id": 23763572019,
       "options": {
@@ -398,7 +457,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(vectorized_raft_leadership_changes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(vectorized_raft_leadership_changes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) ",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -453,10 +512,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 4,
-        "x": 16,
-        "y": 4
+        "x": 20,
+        "y": 3
       },
       "id": 23763572020,
       "options": {
@@ -530,10 +589,10 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 4,
         "x": 20,
-        "y": 4
+        "y": 7
       },
       "id": 23763572021,
       "options": {
@@ -630,7 +689,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "P1809F7CD0C75ACF3"
       },
       "fieldConfig": {
         "defaults": {
@@ -665,7 +724,7 @@
         "h": 8,
         "w": 4,
         "x": 0,
-        "y": 12
+        "y": 11
       },
       "id": 23763572022,
       "options": {
@@ -688,7 +747,7 @@
             "uid": "prometheus"
           },
           "exemplar": true,
-          "expr": "sum(vectorized_reactor_utilization{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
+          "expr": "sum(vectorized_reactor_utilization{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) ",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -751,7 +810,7 @@
         "h": 8,
         "w": 4,
         "x": 4,
-        "y": 12
+        "y": 11
       },
       "id": 23763572023,
       "options": {
@@ -774,7 +833,7 @@
             "uid": "prometheus"
           },
           "exemplar": true,
-          "expr": "100 - (\n  sum(vectorized_memory_allocated_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])\n/\nsum(vectorized_memory_total_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])\n*\n100\n)",
+          "expr": "100 - (\n  sum(vectorized_memory_allocated_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) \n/\nsum(vectorized_memory_total_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) \n*\n100\n)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -785,6 +844,287 @@
       ],
       "title": "Allocated memory",
       "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 75
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 8,
+        "y": 11
+      },
+      "id": 23763572031,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "100 - (stddev(count(vectorized_cluster_partition_leader_id{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (instance)) / \navg(count(vectorized_cluster_partition_leader_id{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (instance)) * 100)",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "100 - (stddev(count(vectorized_cluster_partition_leader_id{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset  1d) by (instance)) / \navg(count(vectorized_cluster_partition_leader_id{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset  1d) by (instance)) * 100)",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "Yesterday cluster sum",
+          "refId": "B"
+        }
+      ],
+      "title": "Leadership Balance",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "Shows the number of clients actively connected. A sudden, extreme change in this metric may indicate problems with connection.",
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yesterday cluster avg"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 12,
+        "y": 11
+      },
+      "hiddenSeries": false,
+      "id": 23763572017,
+      "interval": "1m",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "percentage": false,
+      "pluginVersion": "8.4.3-54429",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "span": 4,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(vectorized_kafka_rpc_active_connections{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
+          "format": "time_series",
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "range": true,
+          "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(vectorized_kafka_rpc_active_connections{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset 1d) by (vectorized_cloud_data_cluster_name)",
+          "hide": true,
+          "legendFormat": "Yesterday cluster avg",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Kafka RPC: Currently active connections",
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "timeseries",
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
     },
     {
       "datasource": {
@@ -875,7 +1215,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 129
+                "value": 90
               }
             ]
           },
@@ -890,14 +1230,26 @@
                 "value": 166
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "revision"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 316
+              }
+            ]
           }
         ]
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 12
+        "w": 8,
+        "x": 16,
+        "y": 11
       },
       "id": 154,
       "options": {
@@ -1055,9 +1407,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 6,
+        "w": 8,
         "x": 0,
-        "y": 20
+        "y": 19
       },
       "id": 23763572024,
       "options": {
@@ -1139,6 +1491,295 @@
     {
       "datasource": {
         "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yesterday cluster average"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 19
+      },
+      "id": 23763572026,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.4.3-54429",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(vectorized_storage_log_written_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "Pod: {{ pod }}",
+          "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(vectorized_storage_log_written_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "Yesterday cluster average",
+          "refId": "B"
+        }
+      ],
+      "title": "Bytes Written",
+      "type": "timeseries"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 19
+      },
+      "hiddenSeries": false,
+      "id": 23763572029,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "percentage": false,
+      "pluginVersion": "8.4.3-54429",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "span": 4,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(vectorized_kafka_rpc_received_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Bytes Received via Kafka RPC",
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "timeseries",
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
         "uid": "P1809F7CD0C75ACF3"
       },
       "description": "Measured within Redpanda",
@@ -1215,9 +1856,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 6,
-        "x": 6,
-        "y": 20
+        "w": 8,
+        "x": 0,
+        "y": 28
       },
       "id": 23763572025,
       "options": {
@@ -1299,6 +1940,406 @@
     {
       "datasource": {
         "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Yesterday cluster average"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 28
+      },
+      "id": 23763572027,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.4.3-54429",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum(rate(vectorized_storage_log_read_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "Pod: {{pod}} Node: {{instance}} Partition: {{partition}} Shard: {{shard}}",
+          "range": true,
+          "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(vectorized_storage_log_read_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "Yesterday cluster average",
+          "refId": "B"
+        }
+      ],
+      "title": "Bytes Read",
+      "type": "timeseries"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 28
+      },
+      "hiddenSeries": false,
+      "id": 23763572030,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "percentage": false,
+      "pluginVersion": "8.4.3-54429",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "span": 4,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(vectorized_kafka_rpc_sent_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Bytes Sent via Kafka RPC",
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "timeseries",
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 37
+      },
+      "id": 156,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.4.3-54429",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "sum by (topic, namespace, vectorized_cloud_data_cluster_name) (vectorized_cluster_partition_under_replicated_replicas{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0 OR on() vector(0)",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 5,
+          "legendFormat": "{{topic}}/{{namespace}}/{{vectorized_cloud_data_cluster_name}}",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "exemplar": true,
+          "expr": "sum by (topic, namespace, vectorized_cloud_data_cluster_name) (vectorized_cluster_partition_under_replicated_replicas{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0 OR on() vector(0)  ",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 5,
+          "legendFormat": "{{topic}}/{{namespace}}/{{vectorized_cloud_data_cluster_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Under replicated partitions by topic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
         "uid": "P1809F7CD0C75ACF3"
       },
       "description": "Partition leader is -1",
@@ -1339,10 +2380,10 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 12,
-        "y": 20
+        "y": 37
       },
       "id": 155,
       "options": {
@@ -1437,381 +2478,6 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Yesterday cluster average"
-            },
-            "properties": [
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 0,
-        "y": 29
-      },
-      "id": 23763572026,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.4.3-54429",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "exemplar": true,
-          "expr": "sum(rate(vectorized_storage_log_written_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
-          "format": "time_series",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Pod: {{ pod }}",
-          "refId": "A",
-          "step": 10
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "exemplar": true,
-          "expr": "sum(rate(vectorized_storage_log_written_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 10,
-          "legendFormat": "Yesterday cluster average",
-          "refId": "B"
-        }
-      ],
-      "title": "Write Traffic",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Yesterday cluster average"
-            },
-            "properties": [
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 6,
-        "y": 29
-      },
-      "id": 23763572027,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.4.3-54429",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "sum(rate(vectorized_storage_log_read_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Pod: {{pod}} Node: {{instance}} Partition: {{partition}} Shard: {{shard}}",
-          "range": true,
-          "refId": "A",
-          "step": 10
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "exemplar": true,
-          "expr": "sum(rate(vectorized_storage_log_read_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 10,
-          "legendFormat": "Yesterday cluster average",
-          "refId": "B"
-        }
-      ],
-      "title": "Read Traffic",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "P1809F7CD0C75ACF3"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 37
-      },
-      "id": 156,
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right"
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.4.3-54429",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "exemplar": true,
-          "expr": "sum by (topic, namespace, vectorized_cloud_data_cluster_name) (vectorized_cluster_partition_under_replicated_replicas{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0 OR on() vector(0)",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 5,
-          "legendFormat": "{{topic}}/{{namespace}}/{{vectorized_cloud_data_cluster_name}}",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "exemplar": true,
-          "expr": "sum by (topic, namespace, vectorized_cloud_data_cluster_name) (vectorized_cluster_partition_under_replicated_replicas{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0 OR on() vector(0)  ",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 5,
-          "legendFormat": "{{topic}}/{{namespace}}/{{vectorized_cloud_data_cluster_name}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Under replicated partitions by topic",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1868,7 +2534,7 @@
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 44
+        "y": 46
       },
       "id": 158,
       "options": {
@@ -1981,7 +2647,7 @@
         "h": 7,
         "w": 6,
         "x": 6,
-        "y": 44
+        "y": 46
       },
       "id": 23763572002,
       "options": {
@@ -2184,7 +2850,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 44
+        "y": 46
       },
       "id": 23763572009,
       "options": {
@@ -2310,7 +2976,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 44
+        "y": 46
       },
       "id": 23763572012,
       "options": {
@@ -2432,7 +3098,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 51
+        "y": 53
       },
       "id": 23763572003,
       "options": {
@@ -2560,7 +3226,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 51
+        "y": 53
       },
       "id": 23763572007,
       "options": {
@@ -2692,7 +3358,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 51
+        "y": 53
       },
       "id": 23763572008,
       "options": {
@@ -2816,7 +3482,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 51
+        "y": 53
       },
       "id": 23763572014,
       "options": {
@@ -2859,197 +3525,6 @@
       "type": "timeseries"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "description": "Shows the number of clients actively connected. A sudden, extreme change in this metric may indicate problems with connection.",
-      "editable": true,
-      "error": false,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Yesterday cluster avg"
-            },
-            "properties": [
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 59
-      },
-      "hiddenSeries": false,
-      "id": 23763572017,
-      "interval": "1m",
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 2,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "percentage": false,
-      "pluginVersion": "8.4.3-54429",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "span": 4,
-      "stack": false,
-      "steppedLine": true,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum(vectorized_kafka_rpc_active_connections{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
-          "format": "time_series",
-          "instant": false,
-          "intervalFactor": 1,
-          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
-          "range": true,
-          "refId": "A",
-          "step": 10
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "sum(vectorized_kafka_rpc_active_connections{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset 1d) by (vectorized_cloud_data_cluster_name)",
-          "hide": true,
-          "legendFormat": "Yesterday cluster avg",
-          "range": true,
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Kafka RPC: Currently active connections",
-      "tooltip": {
-        "msResolution": true,
-        "shared": true,
-        "sort": 0,
-        "value_type": "cumulative"
-      },
-      "type": "timeseries",
-      "xaxis": {
-        "format": "",
-        "logBase": 0,
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "logBase": 1,
-          "min": 0,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "min": 0,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
       "datasource": {
         "type": "datasource",
         "uid": "grafana"
@@ -3060,7 +3535,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 67
+        "y": 61
       },
       "id": 23763572004,
       "options": {
@@ -3153,7 +3628,7 @@
         "h": 15,
         "w": 6,
         "x": 0,
-        "y": 69
+        "y": 63
       },
       "id": 23763571998,
       "options": {
@@ -3284,7 +3759,7 @@
         "h": 15,
         "w": 6,
         "x": 6,
-        "y": 69
+        "y": 63
       },
       "id": 23763572000,
       "options": {
@@ -3412,7 +3887,7 @@
         "h": 15,
         "w": 6,
         "x": 12,
-        "y": 69
+        "y": 63
       },
       "id": 23763571999,
       "options": {
@@ -3540,7 +4015,7 @@
         "h": 15,
         "w": 6,
         "x": 18,
-        "y": 69
+        "y": 63
       },
       "id": 23763572001,
       "options": {
@@ -3631,7 +4106,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3666,7 +4142,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 84
+        "y": 78
       },
       "id": 4,
       "options": {
@@ -3757,7 +4233,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3792,7 +4269,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 84
+        "y": 78
       },
       "id": 5,
       "options": {
@@ -3850,7 +4327,7 @@
         "h": 2,
         "w": 12,
         "x": 0,
-        "y": 90
+        "y": 84
       },
       "id": 6,
       "options": {
@@ -3873,7 +4350,7 @@
         "h": 2,
         "w": 12,
         "x": 12,
-        "y": 90
+        "y": 84
       },
       "id": 9,
       "options": {
@@ -3934,7 +4411,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3952,7 +4430,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 92
+        "y": 86
       },
       "hiddenSeries": false,
       "id": 7,
@@ -4092,7 +4570,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4110,7 +4589,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 92
+        "y": 86
       },
       "hiddenSeries": false,
       "id": 8,
@@ -4250,7 +4729,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4268,7 +4748,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 92
+        "y": 86
       },
       "hiddenSeries": false,
       "id": 10,
@@ -4406,7 +4886,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4424,7 +4905,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 92
+        "y": 86
       },
       "hiddenSeries": false,
       "id": 11,
@@ -4525,7 +5006,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 98
+        "y": 92
       },
       "id": 25,
       "panels": [],
@@ -4582,7 +5063,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4599,7 +5081,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 99
+        "y": 93
       },
       "hiddenSeries": false,
       "id": 24,
@@ -4735,7 +5217,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4752,7 +5235,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 99
+        "y": 93
       },
       "hiddenSeries": false,
       "id": 26,
@@ -4888,7 +5371,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4905,7 +5389,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 99
+        "y": 93
       },
       "hiddenSeries": false,
       "id": 30,
@@ -5041,7 +5525,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -5058,7 +5543,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 105
+        "y": 99
       },
       "hiddenSeries": false,
       "id": 36,
@@ -5194,7 +5679,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -5211,7 +5697,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 105
+        "y": 99
       },
       "hiddenSeries": false,
       "id": 42,
@@ -5347,7 +5833,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -5364,7 +5851,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 105
+        "y": 99
       },
       "hiddenSeries": false,
       "id": 53,
@@ -5500,7 +5987,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -5517,7 +6005,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 111
+        "y": 105
       },
       "hiddenSeries": false,
       "id": 59,
@@ -5653,7 +6141,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -5670,7 +6159,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 111
+        "y": 105
       },
       "hiddenSeries": false,
       "id": 65,
@@ -5806,7 +6295,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -5823,7 +6313,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 111
+        "y": 105
       },
       "hiddenSeries": false,
       "id": 78,
@@ -5959,7 +6449,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -5976,7 +6467,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 117
+        "y": 111
       },
       "hiddenSeries": false,
       "id": 85,
@@ -6112,7 +6603,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -6129,7 +6621,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 117
+        "y": 111
       },
       "hiddenSeries": false,
       "id": 161,
@@ -6269,7 +6761,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -6286,7 +6779,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 117
+        "y": 111
       },
       "hiddenSeries": false,
       "id": 95,
@@ -6422,7 +6915,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -6439,7 +6933,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 123
+        "y": 117
       },
       "hiddenSeries": false,
       "id": 131,
@@ -6575,7 +7069,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -6592,7 +7087,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 123
+        "y": 117
       },
       "hiddenSeries": false,
       "id": 89,
@@ -6726,7 +7221,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -6743,7 +7239,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 123
+        "y": 117
       },
       "hiddenSeries": false,
       "id": 152,
@@ -6898,7 +7394,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -6915,7 +7412,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 129
+        "y": 123
       },
       "hiddenSeries": false,
       "id": 132,
@@ -7055,7 +7552,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -7072,7 +7570,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 129
+        "y": 123
       },
       "hiddenSeries": false,
       "id": 58,
@@ -7169,7 +7667,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 135
+        "y": 129
       },
       "id": 148,
       "panels": [
@@ -7217,7 +7715,8 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green"
+                    "color": "green",
+                    "value": null
                   },
                   {
                     "color": "red",
@@ -7232,7 +7731,7 @@
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 119
+            "y": 130
           },
           "id": 163,
           "options": {
@@ -7280,7 +7779,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 136
+        "y": 130
       },
       "id": 44,
       "panels": [],
@@ -7337,7 +7836,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -7355,7 +7855,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 137
+        "y": 131
       },
       "hiddenSeries": false,
       "id": 43,
@@ -7495,7 +7995,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -7512,7 +8013,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 137
+        "y": 131
       },
       "hiddenSeries": false,
       "id": 45,
@@ -7650,7 +8151,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -7667,7 +8169,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 137
+        "y": 131
       },
       "hiddenSeries": false,
       "id": 46,
@@ -7805,7 +8307,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -7823,7 +8326,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 143
+        "y": 137
       },
       "hiddenSeries": false,
       "id": 47,
@@ -7961,7 +8464,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -7978,7 +8482,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 143
+        "y": 137
       },
       "hiddenSeries": false,
       "id": 48,
@@ -8118,7 +8622,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -8135,7 +8640,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 143
+        "y": 137
       },
       "hiddenSeries": false,
       "id": 62,
@@ -8234,7 +8739,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 149
+        "y": 143
       },
       "id": 52,
       "panels": [],
@@ -8291,7 +8796,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -8308,7 +8814,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 150
+        "y": 144
       },
       "hiddenSeries": false,
       "id": 51,
@@ -8444,7 +8950,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -8461,7 +8968,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 150
+        "y": 144
       },
       "hiddenSeries": false,
       "id": 54,
@@ -8601,7 +9108,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -8619,7 +9127,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 150
+        "y": 144
       },
       "hiddenSeries": false,
       "id": 55,
@@ -8757,7 +9265,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -8774,7 +9283,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 156
+        "y": 150
       },
       "hiddenSeries": false,
       "id": 56,
@@ -8910,7 +9419,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -8927,7 +9437,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 156
+        "y": 150
       },
       "hiddenSeries": false,
       "id": 57,
@@ -9065,7 +9575,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -9082,7 +9593,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 156
+        "y": 150
       },
       "hiddenSeries": false,
       "id": 72,
@@ -9218,7 +9729,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -9236,7 +9748,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 162
+        "y": 156
       },
       "hiddenSeries": false,
       "id": 60,
@@ -9374,7 +9886,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -9391,7 +9904,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 162
+        "y": 156
       },
       "hiddenSeries": false,
       "id": 61,
@@ -9527,7 +10040,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -9544,7 +10058,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 162
+        "y": 156
       },
       "hiddenSeries": false,
       "id": 15,
@@ -9680,7 +10194,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -9697,7 +10212,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 168
+        "y": 162
       },
       "hiddenSeries": false,
       "id": 63,
@@ -9833,7 +10348,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -9851,7 +10367,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 168
+        "y": 162
       },
       "hiddenSeries": false,
       "id": 64,
@@ -9989,7 +10505,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -10006,7 +10523,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 168
+        "y": 162
       },
       "hiddenSeries": false,
       "id": 21,
@@ -10105,7 +10622,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 174
+        "y": 168
       },
       "id": 67,
       "panels": [],
@@ -10162,7 +10679,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -10180,7 +10698,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 175
+        "y": 169
       },
       "hiddenSeries": false,
       "id": 66,
@@ -10320,7 +10838,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -10337,7 +10856,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 175
+        "y": 169
       },
       "hiddenSeries": false,
       "id": 68,
@@ -10473,7 +10992,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -10491,7 +11011,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 175
+        "y": 169
       },
       "hiddenSeries": false,
       "id": 69,
@@ -10629,7 +11149,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -10646,7 +11167,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 181
+        "y": 175
       },
       "hiddenSeries": false,
       "id": 70,
@@ -10782,7 +11303,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -10799,7 +11321,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 181
+        "y": 175
       },
       "hiddenSeries": false,
       "id": 71,
@@ -10937,7 +11459,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -10954,7 +11477,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 181
+        "y": 175
       },
       "hiddenSeries": false,
       "id": 27,
@@ -11090,7 +11613,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -11107,7 +11631,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 187
+        "y": 181
       },
       "hiddenSeries": false,
       "id": 73,
@@ -11243,7 +11767,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -11261,7 +11786,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 187
+        "y": 181
       },
       "hiddenSeries": false,
       "id": 74,
@@ -11401,7 +11926,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -11418,7 +11944,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 187
+        "y": 181
       },
       "hiddenSeries": false,
       "id": 123,
@@ -11517,7 +12043,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 193
+        "y": 187
       },
       "id": 13,
       "panels": [],
@@ -11574,7 +12100,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -11591,7 +12118,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 194
+        "y": 188
       },
       "hiddenSeries": false,
       "id": 12,
@@ -11727,7 +12254,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -11744,7 +12272,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 194
+        "y": 188
       },
       "hiddenSeries": false,
       "id": 14,
@@ -11880,7 +12408,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -11897,7 +12426,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 194
+        "y": 188
       },
       "hiddenSeries": false,
       "id": 18,
@@ -12033,7 +12562,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -12050,7 +12580,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 200
+        "y": 194
       },
       "hiddenSeries": false,
       "id": 16,
@@ -12186,7 +12716,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -12203,7 +12734,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 200
+        "y": 194
       },
       "hiddenSeries": false,
       "id": 17,
@@ -12339,7 +12870,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -12356,7 +12888,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 200
+        "y": 194
       },
       "hiddenSeries": false,
       "id": 82,
@@ -12492,7 +13024,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -12509,7 +13042,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 206
+        "y": 200
       },
       "hiddenSeries": false,
       "id": 19,
@@ -12645,7 +13178,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -12662,7 +13196,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 206
+        "y": 200
       },
       "hiddenSeries": false,
       "id": 20,
@@ -12798,7 +13332,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -12815,7 +13350,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 206
+        "y": 200
       },
       "hiddenSeries": false,
       "id": 86,
@@ -12951,7 +13486,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -12968,7 +13504,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 212
+        "y": 206
       },
       "hiddenSeries": false,
       "id": 22,
@@ -13104,7 +13640,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -13121,7 +13658,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 212
+        "y": 206
       },
       "hiddenSeries": false,
       "id": 23,
@@ -13257,7 +13794,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -13274,7 +13812,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 212
+        "y": 206
       },
       "hiddenSeries": false,
       "id": 90,
@@ -13410,7 +13948,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -13428,7 +13967,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 218
+        "y": 212
       },
       "hiddenSeries": false,
       "id": 49,
@@ -13566,7 +14105,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -13583,7 +14123,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 218
+        "y": 212
       },
       "hiddenSeries": false,
       "id": 50,
@@ -13719,7 +14259,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -13736,7 +14277,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 218
+        "y": 212
       },
       "hiddenSeries": false,
       "id": 98,
@@ -13835,7 +14376,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 224
+        "y": 218
       },
       "id": 76,
       "panels": [
@@ -15699,7 +16240,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 225
+        "y": 219
       },
       "id": 92,
       "panels": [
@@ -19407,7 +19948,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 226
+        "y": 220
       },
       "id": 116,
       "panels": [
@@ -20096,7 +20637,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 227
+        "y": 221
       },
       "id": 125,
       "panels": [],
@@ -20153,7 +20694,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -20171,7 +20713,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 228
+        "y": 222
       },
       "hiddenSeries": false,
       "id": 124,
@@ -20306,7 +20848,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -20323,7 +20866,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 228
+        "y": 222
       },
       "hiddenSeries": false,
       "id": 126,
@@ -20458,7 +21001,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -20475,7 +21019,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 228
+        "y": 222
       },
       "hiddenSeries": false,
       "id": 127,
@@ -20610,7 +21154,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -20627,7 +21172,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 234
+        "y": 228
       },
       "hiddenSeries": false,
       "id": 128,
@@ -20762,7 +21307,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -20779,7 +21325,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 234
+        "y": 228
       },
       "hiddenSeries": false,
       "id": 129,
@@ -20914,7 +21460,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -20931,7 +21478,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 234
+        "y": 228
       },
       "hiddenSeries": false,
       "id": 141,
@@ -21066,7 +21613,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -21083,7 +21631,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 240
+        "y": 234
       },
       "hiddenSeries": false,
       "id": 133,
@@ -21218,7 +21766,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -21235,7 +21784,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 240
+        "y": 234
       },
       "hiddenSeries": false,
       "id": 134,
@@ -21370,7 +21919,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -21387,7 +21937,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 240
+        "y": 234
       },
       "hiddenSeries": false,
       "id": 144,
@@ -21522,7 +22072,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -21539,7 +22090,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 246
+        "y": 240
       },
       "hiddenSeries": false,
       "id": 136,
@@ -21674,7 +22225,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -21691,7 +22243,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 246
+        "y": 240
       },
       "hiddenSeries": false,
       "id": 137,
@@ -21826,7 +22378,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -21843,7 +22396,7 @@
         "h": 6,
         "w": 8,
         "x": 16,
-        "y": 246
+        "y": 240
       },
       "hiddenSeries": false,
       "id": 39,
@@ -21979,7 +22532,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -21996,7 +22550,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 252
+        "y": 246
       },
       "hiddenSeries": false,
       "id": 139,
@@ -22131,7 +22685,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -22149,7 +22704,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 252
+        "y": 246
       },
       "hiddenSeries": false,
       "id": 23763572018,
@@ -22284,7 +22839,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -22301,7 +22857,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 258
+        "y": 252
       },
       "hiddenSeries": false,
       "id": 142,
@@ -22437,7 +22993,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -22454,7 +23011,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 258
+        "y": 252
       },
       "hiddenSeries": false,
       "id": 159,
@@ -22591,7 +23148,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -22609,7 +23167,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 264
+        "y": 258
       },
       "hiddenSeries": false,
       "id": 140,
@@ -22744,7 +23302,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -22761,7 +23320,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 270
+        "y": 264
       },
       "hiddenSeries": false,
       "id": 143,
@@ -22859,7 +23418,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 276
+        "y": 270
       },
       "id": 29,
       "panels": [
@@ -24115,7 +24674,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 277
+        "y": 271
       },
       "id": 167,
       "panels": [],
@@ -24169,7 +24728,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -24187,7 +24747,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 278
+        "y": 272
       },
       "hiddenSeries": false,
       "id": 169,
@@ -24317,7 +24877,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -24335,7 +24896,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 278
+        "y": 272
       },
       "hiddenSeries": false,
       "id": 23763571993,
@@ -24466,7 +25027,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -24483,7 +25045,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 286
+        "y": 280
       },
       "hiddenSeries": false,
       "id": 171,
@@ -24613,7 +25175,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -24630,7 +25193,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 286
+        "y": 280
       },
       "hiddenSeries": false,
       "id": 23763571995,
@@ -24760,7 +25323,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -24777,7 +25341,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 294
+        "y": 288
       },
       "hiddenSeries": false,
       "id": 23763571997,
@@ -24871,9 +25435,13 @@
         "allFormat": "",
         "allValue": ".*",
         "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -24904,9 +25472,13 @@
         "allFormat": "",
         "allValue": ".*",
         "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -24983,10 +25555,13 @@
       },
       {
         "current": {
-          "isNone": true,
-          "selected": false,
-          "text": "None",
-          "value": ""
+          "selected": true,
+          "text": [
+            "None"
+          ],
+          "value": [
+            ""
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -25026,7 +25601,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
