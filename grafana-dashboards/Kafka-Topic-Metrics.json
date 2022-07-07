@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "iteration": 1656951800001,
+  "iteration": 1657205949170,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -84,7 +84,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(vectorized_storage_log_partition_size{topic!=\"__consumer_offsets\"}) by (topic)",
+          "expr": "sum(vectorized_storage_log_partition_size{topic!=\"__consumer_offsets\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (topic)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -94,6 +94,18 @@
         }
       ],
       "title": "Topic Size",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        }
+      ],
       "type": "table"
     },
     {
@@ -146,7 +158,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": true,
-          "expr": "sum(irate(vectorized_cluster_partition_records_produced{topic=~\"[[topic]]\"}[1m])) by ([[aggr_criteria]])",
+          "expr": "sum(irate(vectorized_cluster_partition_records_produced{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
           "interval": "",
           "legendFormat": "topic: {{topic}}, partition: {{partition}}",
           "refId": "A"
@@ -235,7 +247,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": true,
-          "expr": "sum(irate(vectorized_cluster_partition_records_fetched{topic=~\"[[topic]]\"}[1m])) by ([[aggr_criteria]])",
+          "expr": "sum(irate(vectorized_cluster_partition_records_fetched{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
           "interval": "",
           "legendFormat": "topic: {{topic}}, partition: {{partition}}",
           "refId": "A"
@@ -324,7 +336,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": true,
-          "expr": "sum(irate(vectorized_storage_log_written_bytes{topic=~\"[[topic]]\"}[1m])) by ([[aggr_criteria]])",
+          "expr": "sum(irate(vectorized_storage_log_written_bytes{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
           "interval": "",
           "legendFormat": "topic: {{topic}}, partition: {{partition}}",
           "refId": "A"
@@ -413,7 +425,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": true,
-          "expr": "sum(irate(vectorized_storage_log_read_bytes{topic=~\"[[topic]]\"}[1m])) by ([[aggr_criteria]])",
+          "expr": "sum(irate(vectorized_storage_log_read_bytes{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
           "interval": "",
           "legendFormat": "topic: {{topic}}, partition: {{partition}}",
           "refId": "A"
@@ -487,7 +499,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.5.2",
+      "pluginVersion": "",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -502,7 +514,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": true,
-          "expr": "sum(vectorized_storage_log_partition_size{topic=~\"[[topic]]\"}) by ([[aggr_criteria]])",
+          "expr": "sum(vectorized_storage_log_partition_size{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "interval": "",
           "legendFormat": "topic: {{topic}}, partition: {{partition}}",
           "refId": "A"
@@ -548,6 +560,30 @@
   "tags": [],
   "templating": {
     "list": [
+      {
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
+        "definition": "label_values(vectorized_cloud_data_cluster_name)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data cluster",
+        "multi": false,
+        "name": "data_cluster",
+        "options": [],
+        "query": {
+          "query": "label_values(vectorized_cloud_data_cluster_name)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
       {
         "allValue": "",
         "current": {
@@ -612,14 +648,7 @@
           "type": "prometheus",
           "uid": "P1809F7CD0C75ACF3"
         },
-        "filters": [
-          {
-            "condition": "",
-            "key": "topic",
-            "operator": "!=",
-            "value": "kafkaChannel"
-          }
-        ],
+        "filters": [],
         "hide": 0,
         "name": "Filters",
         "skipUrlSync": false,
