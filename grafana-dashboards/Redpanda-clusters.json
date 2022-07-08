@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "iteration": 1656946485262,
+  "iteration": 1657278387460,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -48,7 +48,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -176,7 +176,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "vectorized_application_uptime{vectorized_cloud_data_cluster_name=\"$data_cluster\"}",
@@ -238,7 +238,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -353,7 +353,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "vectorized_application_build{vectorized_cloud_data_cluster_name=\"$data_cluster\"}",
@@ -461,7 +461,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -521,7 +521,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "count by (app) (vectorized_application_uptime{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
@@ -539,7 +539,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -586,7 +586,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_application_uptime{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (pod)",
@@ -602,7 +602,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1809F7CD0C75ACF3"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -662,7 +662,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "count(count by (topic, partition) (vectorized_storage_log_partition_size{namespace=\"kafka\"}))",
@@ -678,7 +678,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Partition leader is -1",
       "fieldConfig": {
@@ -763,7 +763,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "vectorized_cluster_partition_leader_id{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"} == -1",
@@ -836,7 +836,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -916,7 +916,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum by (topic, namespace, vectorized_cloud_data_cluster_name) (vectorized_cluster_partition_under_replicated_replicas{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0",
@@ -929,7 +929,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum by (topic, namespace, vectorized_cloud_data_cluster_name) (vectorized_cluster_partition_under_replicated_replicas{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0",
@@ -946,7 +946,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -987,8 +987,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-blue",
-                "value": null
+                "color": "light-blue"
               },
               {
                 "color": "red",
@@ -1023,7 +1022,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum by (vectorized_cloud_data_cluster_name) (vectorized_cluster_partition_under_replicated_replicas{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0",
@@ -1040,7 +1039,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1081,8 +1080,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1136,7 +1134,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_raft_leader_for{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
@@ -1151,7 +1149,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_raft_leader_for{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset 1d) by (cluster)",
@@ -1168,7 +1166,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1209,8 +1207,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-blue",
-                "value": null
+                "color": "light-blue"
               },
               {
                 "color": "red",
@@ -1339,7 +1336,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -1354,7 +1351,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_raft_leadership_changes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
@@ -1371,7 +1368,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1411,8 +1408,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1464,7 +1460,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_raft_leader_for{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
@@ -1475,7 +1471,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_raft_leader_for{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"} offset 1d) by (cluster)",
@@ -1492,7 +1488,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1586,7 +1582,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_reactor_utilization{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
@@ -1600,7 +1596,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum by (cluster) (avg_over_time(vectorized_reactor_utilization{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d))",
@@ -1617,7 +1613,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -1716,7 +1712,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_storage_log_written_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -1731,7 +1727,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_storage_log_written_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
@@ -1748,7 +1744,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -1847,7 +1843,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -1863,7 +1859,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_storage_log_read_bytes{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
@@ -1880,7 +1876,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Successful SLA Sidecar Produces vs Failed SLA Sidecar Produces",
       "fieldConfig": {
@@ -1966,7 +1962,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_sla_end_to_end_messages_produced_total{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by (vectorized_cloud_data_cluster_name) - sum(rate(vectorized_sla_end_to_end_messages_produced_failed_total{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by (vectorized_cloud_data_cluster_name)",
@@ -1977,7 +1973,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_sla_end_to_end_messages_produced_failed_total{vectorized_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by (vectorized_cloud_data_cluster_name)",
@@ -1997,7 +1993,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Shows the number of clients actively connected. A sudden, extreme change in this metric may indicate problems with connection.",
       "editable": true,
@@ -2119,7 +2115,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2135,7 +2131,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum(vectorized_kafka_rpc_active_connections{vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset 1d) by (vectorized_cloud_data_cluster_name)",
@@ -2206,7 +2202,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Measured within Redpanda",
       "fieldConfig": {
@@ -2305,7 +2301,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.95, sum(rate(vectorized_kafka_latency_produce_latency_us_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
@@ -2319,7 +2315,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.95, sum(rate(vectorized_kafka_latency_produce_latency_us_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
@@ -2336,7 +2332,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Measured within Redpanda",
       "fieldConfig": {
@@ -2432,7 +2428,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.99, sum(rate(vectorized_kafka_latency_produce_latency_us_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
@@ -2446,7 +2442,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.99, sum(rate(vectorized_kafka_latency_produce_latency_us_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
@@ -2463,7 +2459,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Measured within Redpanda",
       "fieldConfig": {
@@ -2559,7 +2555,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.95, sum(rate(vectorized_kafka_latency_fetch_latency_us_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
@@ -2573,7 +2569,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.95, sum(rate(vectorized_kafka_latency_fetch_latency_us_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
@@ -2590,7 +2586,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Measured within Redpanda",
       "fieldConfig": {
@@ -2686,7 +2682,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.99, sum(rate(vectorized_kafka_latency_fetch_latency_us_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
@@ -2700,7 +2696,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.99, sum(rate(vectorized_kafka_latency_fetch_latency_us_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
@@ -2717,7 +2713,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2812,7 +2808,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.95, sum(rate(vectorized_kafka_rpc_dispatch_handler_latency_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
@@ -2826,7 +2822,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.95, sum(rate(vectorized_kafka_rpc_dispatch_handler_latency_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
@@ -2843,7 +2839,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2938,7 +2934,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.99, sum(rate(vectorized_kafka_rpc_dispatch_handler_latency_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
@@ -2952,7 +2948,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.99, sum(rate(vectorized_kafka_rpc_dispatch_handler_latency_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
@@ -3019,7 +3015,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -3121,7 +3117,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.95, sum(rate(vectorized_internal_rpc_dispatch_handler_latency_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
@@ -3177,7 +3173,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -3279,7 +3275,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "histogram_quantile(0.99, sum(rate(vectorized_internal_rpc_dispatch_handler_latency_bucket{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
@@ -3335,7 +3331,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -3437,7 +3433,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_storage_log_read_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -3491,7 +3487,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -3593,7 +3589,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_storage_log_written_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -3663,7 +3659,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -3764,7 +3760,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_httpd_read_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -3816,7 +3812,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -3917,7 +3913,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_httpd_reply_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -3969,7 +3965,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -4070,7 +4066,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_internal_rpc_connection_close_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -4122,7 +4118,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -4223,7 +4219,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_internal_rpc_method_not_found_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -4275,7 +4271,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -4376,7 +4372,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_internal_rpc_service_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -4428,7 +4424,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -4529,7 +4525,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_kafka_rpc_connection_close_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -4581,7 +4577,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -4682,7 +4678,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_kafka_rpc_method_not_found_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -4734,7 +4730,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -4835,7 +4831,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_kafka_rpc_service_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -4887,7 +4883,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -4988,7 +4984,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_heartbeat_requests_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -5040,7 +5036,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -5141,7 +5137,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_recovery_requests_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -5193,7 +5189,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -5294,7 +5290,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(irate(vectorized_rpc{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -5350,7 +5346,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -5451,7 +5447,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_aio_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -5503,7 +5499,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -5604,7 +5600,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_storage_log_batch_parse_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -5656,7 +5652,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -5757,7 +5753,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_replicate_request_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -5809,7 +5805,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -5907,7 +5903,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(irate(vectorized_archival_service_failed_uploads{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -5920,7 +5916,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(irate(vectorized_archival_service_manifest_backoff{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -5932,7 +5928,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(irate(vectorized_archival_service_upload_backoff{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -5979,7 +5975,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -6080,7 +6076,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(irate(vectorized_rpc_client_server_correlation_errors{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -6136,7 +6132,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -6237,7 +6233,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_kafka_rpc_max_service_mem_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -6304,7 +6300,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "If the uptime increase rate is not as we expect it (in ms)\nwe alert",
           "fieldConfig": {
@@ -6378,7 +6374,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_application_uptime{vectorized_cloud_data_cluster_name=~\"redpanda-stage-us|ps-redpanda-.*|workload-org37ctr339|workload-org10ctr100|workload-org79.*\"}[5m])) without(instance)",
@@ -6423,7 +6419,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -6525,7 +6521,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_io_queue_delay{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -6581,7 +6577,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -6682,7 +6678,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_io_queue_queue_length{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -6736,7 +6732,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -6837,7 +6833,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_io_queue_shares{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (class,[[aggr_criteria]])",
@@ -6891,7 +6887,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -6993,7 +6989,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_io_queue_total_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -7047,7 +7043,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -7148,7 +7144,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(irate(vectorized_io_queue_total_operations{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -7204,7 +7200,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -7305,7 +7301,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_kafka_rpc_requests_completed{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -7377,7 +7373,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -7478,7 +7474,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_kafka_rpc_active_connections{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -7530,7 +7526,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -7631,7 +7627,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(irate(vectorized_kafka_rpc_connects{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -7687,7 +7683,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -7789,7 +7785,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_kafka_rpc_consumed_mem_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -7843,7 +7839,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -7944,7 +7940,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_kafka_rpc_corrupted_headers{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -7996,7 +7992,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -8097,7 +8093,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_kafka_rpc_dispatch_handler_latency{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -8151,7 +8147,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -8252,7 +8248,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_memory_malloc_operations{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -8304,7 +8300,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -8406,7 +8402,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_kafka_rpc_received_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -8460,7 +8456,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -8561,7 +8557,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_kafka_rpc_requests_blocked_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -8613,7 +8609,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -8714,7 +8710,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_alien_total_sent_messages{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -8766,7 +8762,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -8867,7 +8863,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_kafka_rpc_requests_pending{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -8919,7 +8915,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -9021,7 +9017,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_kafka_rpc_sent_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -9075,7 +9071,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -9176,7 +9172,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_cluster_partition_records_produced{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -9248,7 +9244,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -9350,7 +9346,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_memory_allocated_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -9406,7 +9402,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -9507,7 +9503,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_memory_cross_cpu_free_operations{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -9559,7 +9555,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -9661,7 +9657,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_memory_free_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
@@ -9715,7 +9711,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -9816,7 +9812,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_memory_free_operations{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -9868,7 +9864,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -9969,7 +9965,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_memory_malloc_live_objects{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -10023,7 +10019,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -10124,7 +10120,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_httpd_requests_served{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -10176,7 +10172,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -10277,7 +10273,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_memory_reclaims_operations{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -10329,7 +10325,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -10431,7 +10427,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_memory_total_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
@@ -10487,7 +10483,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -10588,7 +10584,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_stall_detector_reported{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -10660,7 +10656,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -10761,7 +10757,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_alien_receive_batch_queue_length{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -10813,7 +10809,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -10914,7 +10910,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_alien_total_received_messages{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -10966,7 +10962,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -11067,7 +11063,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_cluster_partition_last_stable_offset{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -11119,7 +11115,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -11220,7 +11216,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_application_uptime{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -11272,7 +11268,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -11373,7 +11369,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_cluster_partition_committed_offset{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -11425,7 +11421,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -11526,7 +11522,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_raft_log_truncations{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -11578,7 +11574,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -11679,7 +11675,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_cluster_partition_leader{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -11731,7 +11727,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -11832,7 +11828,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_cluster_partition_records_fetched{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -11884,7 +11880,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -11985,7 +11981,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_raft_replicate_ack_all_requests{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -12037,7 +12033,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -12138,7 +12134,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_httpd_connections_current{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -12190,7 +12186,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -12291,7 +12287,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_httpd_connections_total{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -12343,7 +12339,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -12444,7 +12440,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_raft_sent_vote_requests{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -12496,7 +12492,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -12598,7 +12594,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(vectorized_kafka_fetch_sessions_cache_mem_usage_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
@@ -12652,7 +12648,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -12753,7 +12749,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_kafka_fetch_sessions_cache_sessions_count{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -12805,7 +12801,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -12906,7 +12902,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_reactor_cpp_exceptions{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -12974,7 +12970,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -13075,7 +13071,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_done_replicate_requests{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -13127,7 +13123,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -13228,7 +13224,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(vectorized_raft_group_count{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -13280,7 +13276,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -13381,7 +13377,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(vectorized_raft_leader_for{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -13433,7 +13429,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -13534,7 +13530,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_leadership_changes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -13586,7 +13582,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -13687,7 +13683,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_log_flushes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -13739,7 +13735,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "A high rate indicates high disk activity. Divide by fstream_reads to determine average read size.",
           "editable": true,
@@ -13842,7 +13838,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_reactor_fstream_read_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -13896,7 +13892,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -13997,7 +13993,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_received_append_requests{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -14049,7 +14045,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -14150,7 +14146,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_received_vote_requests{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -14202,7 +14198,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -14304,7 +14300,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_reactor_fstream_reads_ahead_bytes_discarded{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -14358,7 +14354,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -14459,7 +14455,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_replicate_ack_leader_requests{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -14511,7 +14507,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -14612,7 +14608,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_raft_replicate_ack_none_requests{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -14664,7 +14660,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -14765,7 +14761,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_fsyncs{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -14838,7 +14834,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -14939,7 +14935,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_abandoned_failed_futures{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -14991,7 +14987,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -15093,7 +15089,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_reactor_aio_bytes_read{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -15147,7 +15143,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -15249,7 +15245,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_reactor_aio_bytes_write{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -15303,7 +15299,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -15404,7 +15400,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_aio_reads{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -15456,7 +15452,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -15557,7 +15553,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_aio_writes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -15609,7 +15605,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -15710,7 +15706,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_polls{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -15762,7 +15758,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -15863,7 +15859,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(irate(vectorized_reactor_cpu_busy_ms{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -15919,7 +15915,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -16020,7 +16016,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_cpu_steal_time_ms{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -16072,7 +16068,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -16173,7 +16169,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_timers_pending{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -16225,7 +16221,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Rate - Counts the number of bytes read from disk that could not be satisfied from read-ahead buffers, and had to block. Indicates short streams, or incorrect read ahead configuration.",
           "editable": true,
@@ -16328,7 +16324,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_reactor_fstream_read_bytes_blocked{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -16382,7 +16378,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -16483,7 +16479,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_fstream_reads{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -16535,7 +16531,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -16636,7 +16632,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_internal_rpc_max_service_mem_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -16688,7 +16684,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -16789,7 +16785,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_fstream_reads_aheads_discarded{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -16841,7 +16837,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -16942,7 +16938,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_fstream_reads_blocked{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -16994,7 +16990,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -17095,7 +17091,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_storage_kvstore_segments_rolled{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -17146,7 +17142,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -17247,7 +17243,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_io_threaded_fallbacks{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -17299,7 +17295,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -17400,7 +17396,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_logging_failures{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -17452,7 +17448,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -17553,7 +17549,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_storage_log_cached_batches_read{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -17604,7 +17600,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -17705,7 +17701,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(vectorized_reactor_tasks_pending{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -17757,7 +17753,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -17858,7 +17854,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_reactor_tasks_processed{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -17910,7 +17906,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -18011,7 +18007,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_storage_log_corrupted_compaction_indices{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -18062,7 +18058,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -18163,7 +18159,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(vectorized_reactor_utilization{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -18215,7 +18211,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -18316,7 +18312,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(vectorized_internal_rpc_dispatch_handler_latency{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -18368,7 +18364,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "",
           "editable": true,
@@ -18470,7 +18466,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(vectorized_storage_log_log_segments_active{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
@@ -18546,7 +18542,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -18589,7 +18585,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(vectorized_scheduler_queue_length{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -18641,7 +18637,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -18684,7 +18680,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_scheduler_runtime_ms{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -18736,7 +18732,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -18779,7 +18775,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(vectorized_scheduler_shares{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (group, [[aggr_criteria]])",
@@ -18833,7 +18829,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Rate - Accumulated starvation time of this task queue; an increment rate of 1000ms per second indicates the scheduler feels really bad",
           "editable": true,
@@ -18877,7 +18873,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_scheduler_starvetime_ms{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -18929,7 +18925,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -18972,7 +18968,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_scheduler_tasks_processed{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -19024,7 +19020,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -19067,7 +19063,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_scheduler_time_spent_on_task_quota_violations_ms{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -19119,7 +19115,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -19162,7 +19158,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_scheduler_waittime_ms{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -19239,7 +19235,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -19341,7 +19337,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_kvstore_cached_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -19392,7 +19388,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -19493,7 +19489,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_kvstore_entries_fetched{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -19544,7 +19540,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -19645,7 +19641,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_kvstore_entries_removed{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -19696,7 +19692,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -19797,7 +19793,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_kvstore_entries_written{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -19848,7 +19844,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -19949,7 +19945,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_kvstore_key_count{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -20000,7 +19996,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -20101,7 +20097,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_read_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -20152,7 +20148,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -20253,7 +20249,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_batches_read{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -20304,7 +20300,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -20405,7 +20401,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_batches_written{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -20456,7 +20452,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -20557,7 +20553,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_cached_read_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]]) / sum(irate(vectorized_storage_log_read_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -20608,7 +20604,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -20709,7 +20705,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_cached_read_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -20760,7 +20756,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -20861,7 +20857,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_compacted_segment{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -20912,7 +20908,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -21013,7 +21009,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_internal_rpc_requests_completed{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -21065,7 +21061,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -21166,7 +21162,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_log_segments_created{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -21217,7 +21213,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -21319,7 +21315,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_storage_log_log_segments_active{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -21370,7 +21366,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -21471,7 +21467,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_written_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -21522,7 +21518,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "editable": true,
@@ -21624,7 +21620,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(irate(vectorized_storage_log_log_segments_removed{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -21677,7 +21673,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -21779,7 +21775,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(vectorized_storage_log_partition_size{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -21830,7 +21826,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -21931,7 +21927,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(irate(vectorized_storage_log_cached_batches_read{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]]) / sum(irate(vectorized_storage_log_batches_read{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
@@ -21998,7 +21994,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -22099,7 +22095,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(vectorized_internal_rpc_active_connections{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -22151,7 +22147,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -22252,7 +22248,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_internal_rpc_connects{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -22304,7 +22300,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -22406,7 +22402,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_internal_rpc_consumed_mem_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -22462,7 +22458,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -22563,7 +22559,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_internal_rpc_corrupted_headers{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -22615,7 +22611,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -22716,7 +22712,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(irate(vectorized_internal_rpc_requests_blocked_memory{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -22768,7 +22764,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -22870,7 +22866,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_internal_rpc_received_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -22926,7 +22922,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -23028,7 +23024,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(rate(vectorized_internal_rpc_sent_bytes{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -23082,7 +23078,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editable": true,
           "error": false,
@@ -23183,7 +23179,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum(vectorized_internal_rpc_requests_pending{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
               "format": "time_series",
@@ -23257,7 +23253,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -23356,7 +23352,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_cloud_storage_bytes_sent{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -23405,7 +23401,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -23504,7 +23500,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_cloud_storage_bytes_received{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -23554,7 +23550,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -23652,7 +23648,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(irate(vectorized_cloud_storage_failed_downloads{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -23701,7 +23697,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -23799,7 +23795,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(irate(vectorized_cloud_storage_failed_uploads{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -23848,7 +23844,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -23946,7 +23942,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(rate(vectorized_s3_client_num_slowdowns{instance=~\"[[node]]\",shard=~\"[[node_shard]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
@@ -24000,6 +23996,24 @@
   "templating": {
     "list": [
       {
+        "current": {
+          "selected": false,
+          "text": "prometheus",
+          "value": "prometheus"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data Source",
+        "multi": false,
+        "name": "DS_PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
         "allFormat": "",
         "allValue": ".*",
         "current": {
@@ -24009,7 +24023,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "",
         "hide": 0,
@@ -24042,7 +24056,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "",
         "hide": 0,
@@ -24122,7 +24136,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(vectorized_cloud_data_cluster_name)",
         "hide": 0,
@@ -24158,7 +24172,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -24189,6 +24203,6 @@
   "timezone": "",
   "title": "Redpanda clusters",
   "uid": "f8SxhywGk",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
