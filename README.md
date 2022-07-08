@@ -110,14 +110,12 @@ partitions, only the first 4 will consume any data).
 ```commandline
 docker exec -it redpanda-0 rpk topic consume test_topic --group singleGroup 
 ```
-You
-#### Docker
-Set up Producer:
-```commandline
-curl --retry 9999 -s -H 'Accept: application/json'  https://stream.wikimedia.org/v2/stream/recentchange |  docker exec -t redpanda-0 rpk --brokers localhost:9092 topic produce test_topic -o '' 
-```
 Set up one or more consumers (you can run this command in multiple windows, although as the topic we created only has 4 
 partitions, only the first 4 will consume any data).
+#### Docker
+```commandline
+docker exec -t redpanda-0 rpk topic consume test_topic --group singleGroup 
+```
 ```commandline
 rpk topic consume test_topic --group singleGroup --brokers localhost:9092 
 ```
