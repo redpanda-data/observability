@@ -22,6 +22,11 @@ _Note: This is considered deprecated in favour of the above dashboards._
 consumers, using the [Prometheus JMX Exporter](https://github.com/prometheus/jmx_exporter) and the
 [Kafka Sample Configuration](https://github.com/prometheus/jmx_exporter/blob/master/example_configs/kafka-2_0_0.yml).
 
+## Screenshots
+![](docs/images/Ops%20Dashboard.png)
+![](docs/images/Consumer%20Offsets.png)
+![](docs/images/Topic%20Metrics.png)
+
 ## Sandbox Environment
 The [demo](demo) folder includes a full dockerized sandbox, that will spin up a three-node RedPanda cluster, an instance
 of Redpanda Console, a Prometheus instance and a Grafana instance with Prometheus and Grafana configured with the
