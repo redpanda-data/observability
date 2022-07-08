@@ -86,13 +86,13 @@ installed locally on your machine, and one where you use `rpk` running inside on
 
 You can install `rpk` locally on a Mac using the [instructions here](https://docs.redpanda.com/docs/quickstart/quick-start-macos/#installing-rpk). 
 
-### Create a Topic {.tabset}
+### Create a Topic
 #### Local rpk
 ```rpk topic create test_topic -r 3 -p 4 --brokers localhost:9092```
 ### Docker
 ```docker exec redpanda-0 rpk topic create test_topic -r 3 -p 4```
 
-### Create some producers and consumers {.tabset}
+### Create some producers and consumers
 In this section we're going to stream some data from the Wikimedia changelog using Curl.
 
 #### Local rpk
