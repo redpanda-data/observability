@@ -46,6 +46,23 @@ Creating grafana    ... done
 Creating console    ... done
 Creating prometheus ... done
 ```
+Note: If you wish to include the Owlshop demo, you may include the separate Owlshop docker compose file, replacing the
+above command as follows:
+```commandline
+$ cd demo
+$  docker compose -f docker-compose.yml -f docker-compose-owlshop -d
+Creating network "demo_default" with the default driver
+[+] Running 8/8
+ ⠿ Container redpanda-1       Started                                                                                                                                                                                              0.5s
+ ⠿ Container redpanda-2       Started                                                                                                                                                                                              0.5s
+ ⠿ Container grafana          Started                                                                                                                                                                                              0.7s
+ ⠿ Container redpanda-0       Started                                                                                                                                                                                              0.7s
+ ⠿ Container prometheus       Started                                                                                                                                                                                              0.6s
+ ⠿ Container demo-owl-shop-1  Started                                                                                                                                                                                              1.1s
+ ⠿ Container demo-console-1   Started                                                                                                                                                                                              1.2s
+ ⠿ Container connect          Started
+```
+
 You can check the status of the RedPanda cluster using the following command:
 ```commandline
 $ docker exec -it redpanda-0 rpk cluster status
@@ -94,7 +111,7 @@ You can install `rpk` locally on a Mac using the [instructions here](https://doc
 ### Create a Topic
 #### Local rpk
 ```rpk topic create test_topic -r 3 -p 4 --brokers localhost:9092```
-### Docker
+#### Docker
 ```docker exec redpanda-0 rpk topic create test_topic -r 3 -p 4```
 
 ### Create some producers and consumers
