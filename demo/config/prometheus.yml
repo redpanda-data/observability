@@ -9,6 +9,7 @@ scrape_configs:
     - redpanda-0:9644
     - redpanda-1:9644
     - redpanda-2:9644
+  metrics_path: /public_metrics
 - job_name: "prometheus"
   static_configs:
   - targets: ["localhost:9090"]
