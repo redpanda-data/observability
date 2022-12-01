@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "iteration": 1657278354028,
+  "iteration": 1669902076001,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -54,7 +54,7 @@
               }
             ]
           },
-          "unit": "decbytes"
+          "unit": "none"
         },
         "overrides": []
       },
@@ -82,9 +82,9 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
+          "editorMode": "explain",
           "exemplar": false,
-          "expr": "sum(vectorized_storage_log_partition_size{topic!=\"__consumer_offsets\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (topic)",
+          "expr": "(sum(redpanda_kafka_max_offset{topic!=\"__consumer_offsets\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (redpanda_topic))   ",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -157,10 +157,12 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "builder",
           "exemplar": true,
-          "expr": "sum(irate(vectorized_cluster_partition_records_produced{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
+          "expr": "sum by(redpanda_topic) (rate(redpanda_kafka_max_offset{redpanda_topic=~\"[[redpanda_topic]]\", redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m]))",
           "interval": "",
-          "legendFormat": "topic: {{topic}}, partition: {{partition}}",
+          "legendFormat": "{{redpanda_topic}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -246,10 +248,12 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(irate(vectorized_cluster_partition_records_fetched{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
+          "expr": "sum(redpanda_kafka_max_offset{redpanda_topic=~\"[[redpanda_topic]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (redpanda_topic)",
           "interval": "",
-          "legendFormat": "topic: {{topic}}, partition: {{partition}}",
+          "legendFormat": "{{redpanda_topic}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -335,16 +339,18 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(irate(vectorized_storage_log_written_bytes{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
+          "expr": "sum(irate(redpanda_kafka_request_bytes_total{redpanda_topic=~\"[[redpanda_topic]]\", redpanda_request=\"produce\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by (redpanda_topic)",
           "interval": "",
-          "legendFormat": "topic: {{topic}}, partition: {{partition}}",
+          "legendFormat": "topic: {{redpanda_topic}}",
+          "range": true,
           "refId": "A"
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Write Throughput per Topic (Replicated)",
+      "title": "Write Throughput per Topic",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -424,10 +430,12 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(irate(vectorized_storage_log_read_bytes{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
+          "expr": "sum(irate(redpanda_kafka_request_bytes_total{redpanda_topic=~\"[[redpanda_topic]]\",redpanda_request=\"consume\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}[1m])) by ([[aggr_criteria]])",
           "interval": "",
-          "legendFormat": "topic: {{topic}}, partition: {{partition}}",
+          "legendFormat": "{{redpanda_topic}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -455,95 +463,6 @@
         },
         {
           "$$hashKey": "object:226",
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 23
-      },
-      "hiddenSeries": false,
-      "id": 4,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "exemplar": true,
-          "expr": "sum(vectorized_storage_log_partition_size{topic=~\"[[topic]]\",vectorized_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
-          "interval": "",
-          "legendFormat": "topic: {{topic}}, partition: {{partition}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Topic Size",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:24",
-          "format": "decbytes",
-          "logBase": 1,
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:25",
           "format": "short",
           "logBase": 1,
           "show": true
@@ -609,23 +528,27 @@
       {
         "allValue": "",
         "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(vectorized_cluster_partition_records_fetched{topic !~ 'controller|group'}, topic)",
+        "definition": "label_values(redpanda_kafka_request_bytes_total{redpanda_topic !~ 'controller|group'}, redpanda_topic)",
         "hide": 0,
         "includeAll": true,
         "label": "Topic",
         "multi": true,
-        "name": "topic",
+        "name": "redpanda_topic",
         "options": [],
         "query": {
-          "query": "label_values(vectorized_cluster_partition_records_fetched{topic !~ 'controller|group'}, topic)",
+          "query": "label_values(redpanda_kafka_request_bytes_total{redpanda_topic !~ 'controller|group'}, redpanda_topic)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -640,8 +563,8 @@
       {
         "current": {
           "selected": true,
-          "text": "Topic,Partition",
-          "value": "topic,partition"
+          "text": "Topic",
+          "value": "redpanda_topic"
         },
         "hide": 0,
         "includeAll": false,
@@ -650,17 +573,17 @@
         "name": "aggr_criteria",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "Topic",
-            "value": "topic"
+            "value": "redpanda_topic"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "Topic,Partition",
-            "value": "topic,partition"
+            "value": "redpanda_topic,redpanda_partition"
           }
         ],
-        "query": "Topic : topic,Topic\\,Partition : topic\\,partition",
+        "query": "Topic : redpanda_topic,Topic\\,Partition : redpanda_topic\\,redpanda_partition",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -686,6 +609,6 @@
   "timezone": "",
   "title": "Kafka Topic Metrics",
   "uid": "Nxwln29Mz",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
