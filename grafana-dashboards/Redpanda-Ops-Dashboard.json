@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "iteration": 1669901799890,
+  "iteration": 1670094203456,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -138,7 +138,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum  by (app) (redpanda_cluster_brokers{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) OR on() vector(0)",
+          "expr": "count  by (app) (redpanda_application_uptime_seconds_total{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) OR on() vector(0)",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -153,7 +153,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max_over_time(sum by (app) (redpanda_cluster_brokers{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}   )[1w:])",
+          "expr": "max_over_time(count by (app) (redpanda_application_uptime_seconds_total{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}   )[1w:])",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -191,19 +191,39 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-greens"
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "hidden",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            }
           },
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
-                "color": "green",
+                "color": "dark-red",
                 "value": null
+              },
+              {
+                "color": "dark-green",
+                "value": 90
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -215,18 +235,25 @@
       },
       "id": 23763572006,
       "options": {
-        "displayMode": "gradient",
-        "minVizHeight": 10,
-        "minVizWidth": 0,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "barRadius": 0,
+        "barWidth": 1,
+        "groupWidth": 0.77,
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "right"
         },
-        "showUnfilled": true
+        "orientation": "horizontal",
+        "showValue": "always",
+        "stacking": "none",
+        "text": {},
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
       },
       "pluginVersion": "",
       "targets": [
@@ -235,16 +262,20 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "exemplar": true,
-          "expr": "sum(redpanda_application_uptime_seconds_total{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (instance)",
-          "instant": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (instance) (redpanda_application_uptime_seconds_total{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
+          "format": "time_series",
+          "hide": false,
+          "instant": true,
           "interval": "",
-          "legendFormat": "{{pod}}",
+          "legendFormat": "{{instance}}",
+          "range": false,
           "refId": "A"
         }
       ],
       "title": "Node Uptime",
-      "type": "bargauge"
+      "type": "barchart"
     },
     {
       "datasource": {
@@ -558,7 +589,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Partition leader is -1",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -571,6 +602,10 @@
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "dark-red",
+                "value": 1
               }
             ]
           },
@@ -620,7 +655,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum  (redpanda_cluster_unavailable_partitions{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} == -1) OR on() vector(0)",
+          "expr": "sum  (redpanda_cluster_unavailable_partitions{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} == -1) OR on() vector(0) + sum(max by(redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions ) - count by(redpanda_namespace, redpanda_topic) (count by (redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas)))",
           "format": "table",
           "instant": false,
           "interval": "",
@@ -881,7 +916,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 4,
         "x": 8,
         "y": 11
@@ -1158,7 +1193,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": [
           {
@@ -1335,6 +1370,96 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 90
+              },
+              {
+                "color": "green",
+                "value": 99
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 15
+      },
+      "id": 23763572032,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "100 * abs(1-(sum(stddev by (redpanda_topic) (sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",redpanda_cloud_data_cluster_name=~\"\"}) by (redpanda_topic,redpanda_partition))) /  sum(avg by (redpanda_topic) ((sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",redpanda_cloud_data_cluster_name=~\"\"}) by (redpanda_topic,redpanda_partition))))))",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "100 - (stddev(count(redpanda_cluster_partition_leader_id{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset  1d) by (instance)) / \navg(count(redpanda_cluster_partition_leader_id{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset  1d) by (instance)) * 100)",
+          "hide": true,
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "Yesterday cluster sum",
+          "refId": "B"
+        }
+      ],
+      "title": "Partition Balance",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "Measured within Redpanda",
       "fieldConfig": {
         "defaults": {
@@ -1384,7 +1509,7 @@
               }
             ]
           },
-          "unit": "µs"
+          "unit": "s"
         },
         "overrides": [
           {
@@ -1833,7 +1958,7 @@
               }
             ]
           },
-          "unit": "µs"
+          "unit": "s"
         },
         "overrides": [
           {
@@ -3784,12 +3909,14 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (redpanda_topic, redpanda_namespace, redpanda_cloud_data_cluster_name) (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0 OR on() vector(0)",
+          "expr": "sum by (redpanda_topic, redpanda_namespace, redpanda_cloud_data_cluster_name) (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) ",
           "hide": false,
           "interval": "",
           "intervalFactor": 5,
-          "legendFormat": "{{topic}}/{{namespace}}/{{redpanda_cloud_data_cluster_name}}",
+          "legendFormat": "{{redpanda_topic}}/{{redpanda_namespace}}/{{redpanda_cloud_data_cluster_name}}",
+          "range": true,
           "refId": "B"
         },
         {
@@ -3797,12 +3924,14 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (redpanda_topic, redpanda_namespace, redpanda_cloud_data_cluster_name) (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0 OR on() vector(0)  ",
+          "expr": "sum by (redpanda_topic, redpanda_namespace, redpanda_cloud_data_cluster_name) (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) ",
           "hide": false,
           "interval": "",
           "intervalFactor": 5,
-          "legendFormat": "{{topic}}/{{namespace}}/{{redpanda_cloud_data_cluster_name}}",
+          "legendFormat": "{{redpanda_topic}}/{{redpanda_namespace}}/{{redpanda_cloud_data_cluster_name}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -3877,7 +4006,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": " (redpanda_cluster_partition_leader_id{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} == -1) ",
+          "expr": "max by(redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions ) - count by(redpanda_namespace, redpanda_topic) (count by (redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas))",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -3997,7 +4126,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "s"
         },
         "overrides": [
           {
@@ -5027,7 +5156,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 38
+            "y": 93
           },
           "hiddenSeries": false,
           "id": 46,
@@ -5067,6 +5196,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Rate - Total number of rest_proxy server errors",
           "tooltip": {
@@ -5118,7 +5248,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 38
+            "y": 93
           },
           "hiddenSeries": false,
           "id": 50,
@@ -5158,6 +5288,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Rate - Number of rpc errors",
           "tooltip": {
@@ -5209,7 +5340,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 38
+            "y": 93
           },
           "hiddenSeries": false,
           "id": 54,
@@ -5249,6 +5380,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Rate - Total number of schema_registry server errors",
           "tooltip": {
@@ -5317,7 +5449,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 39
+            "y": 100
           },
           "hiddenSeries": false,
           "id": 26,
@@ -5357,6 +5489,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Rate - Total read operations passed in the queue",
           "tooltip": {
@@ -5408,7 +5541,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 39
+            "y": 100
           },
           "hiddenSeries": false,
           "id": 28,
@@ -5448,6 +5581,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Rate - Total write operations passed in the queue",
           "tooltip": {
@@ -5516,7 +5650,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 40
+            "y": 107
           },
           "hiddenSeries": false,
           "id": 35,
@@ -5555,6 +5689,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Allocated memory size in bytes",
           "tooltip": {
@@ -5606,7 +5741,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 40
+            "y": 107
           },
           "hiddenSeries": false,
           "id": 37,
@@ -5645,6 +5780,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Total shard memory potentially available in bytes (free_memory plus reclaimable)",
           "tooltip": {
@@ -5696,7 +5832,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 40
+            "y": 107
           },
           "hiddenSeries": false,
           "id": 38,
@@ -5735,6 +5871,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "The low-water mark for available_memory from process start",
           "tooltip": {
@@ -5786,7 +5923,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 46
+            "y": 113
           },
           "hiddenSeries": false,
           "id": 39,
@@ -5825,6 +5962,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Free memory size in bytes",
           "tooltip": {
@@ -5893,7 +6031,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 65
+            "y": 120
           },
           "hiddenSeries": false,
           "id": 13,
@@ -5984,7 +6122,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 65
+            "y": 120
           },
           "hiddenSeries": false,
           "id": 15,
@@ -6075,7 +6213,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 65
+            "y": 120
           },
           "hiddenSeries": false,
           "id": 16,
@@ -6166,7 +6304,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 71
+            "y": 126
           },
           "hiddenSeries": false,
           "id": 17,
@@ -6257,7 +6395,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 71
+            "y": 126
           },
           "hiddenSeries": false,
           "id": 18,
@@ -6349,7 +6487,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 71
+            "y": 126
           },
           "hiddenSeries": false,
           "id": 19,
@@ -6440,7 +6578,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 77
+            "y": 132
           },
           "hiddenSeries": false,
           "id": 20,
@@ -6479,6 +6617,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Amount of partitions that are moving to node",
           "tooltip": {
@@ -6530,7 +6669,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 77
+            "y": 132
           },
           "hiddenSeries": false,
           "id": 21,
@@ -6569,6 +6708,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Amount of cancelling partition movements for node",
           "tooltip": {
@@ -6620,7 +6760,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 77
+            "y": 132
           },
           "hiddenSeries": false,
           "id": 22,
@@ -6659,6 +6799,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Number of partitions in the cluster (replicas not included)",
           "tooltip": {
@@ -6710,7 +6851,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 83
+            "y": 138
           },
           "hiddenSeries": false,
           "id": 23,
@@ -6749,6 +6890,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Number of topics in the cluster",
           "tooltip": {
@@ -6800,7 +6942,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 83
+            "y": 138
           },
           "hiddenSeries": false,
           "id": 24,
@@ -6839,6 +6981,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Number of partitions that lack quorum among replicants",
           "tooltip": {
@@ -6890,7 +7033,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 83
+            "y": 138
           },
           "hiddenSeries": false,
           "id": 25,
@@ -6929,6 +7072,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Total CPU busy time in seconds",
           "tooltip": {
@@ -6980,7 +7124,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 89
+            "y": 144
           },
           "hiddenSeries": false,
           "id": 29,
@@ -7019,6 +7163,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Latest committed offset for the partition (i.e. the offset of the last message safely persisted on most replicas)",
           "tooltip": {
@@ -7070,7 +7215,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 89
+            "y": 144
           },
           "hiddenSeries": false,
           "id": 30,
@@ -7109,6 +7254,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Configured number of partitions for the topic",
           "tooltip": {
@@ -7160,7 +7306,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 89
+            "y": 144
           },
           "hiddenSeries": false,
           "id": 31,
@@ -7199,6 +7345,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Configured number of replicas for the topic",
           "tooltip": {
@@ -7250,7 +7397,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 95
+            "y": 150
           },
           "hiddenSeries": false,
           "id": 32,
@@ -7290,6 +7437,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Rate - Total number of bytes produced per topic",
           "tooltip": {
@@ -7341,7 +7489,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 95
+            "y": 150
           },
           "hiddenSeries": false,
           "id": 33,
@@ -7380,6 +7528,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Internal latency of kafka produce requests",
           "tooltip": {
@@ -7431,7 +7580,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 95
+            "y": 150
           },
           "hiddenSeries": false,
           "id": 34,
@@ -7470,6 +7619,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Number of under replicated replicas (i.e. replicas that are live, but not at the latest offest)",
           "tooltip": {
@@ -7521,7 +7671,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 101
+            "y": 156
           },
           "hiddenSeries": false,
           "id": 40,
@@ -7560,6 +7710,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Number of node status RPCs received by this node",
           "tooltip": {
@@ -7611,7 +7762,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 101
+            "y": 156
           },
           "hiddenSeries": false,
           "id": 41,
@@ -7650,6 +7801,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Number of node status RPCs sent by this node",
           "tooltip": {
@@ -7701,7 +7853,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 101
+            "y": 156
           },
           "hiddenSeries": false,
           "id": 42,
@@ -7740,6 +7892,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Number of timed out node status RPCs from this node",
           "tooltip": {
@@ -7791,7 +7944,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 107
+            "y": 162
           },
           "hiddenSeries": false,
           "id": 48,
@@ -7830,6 +7983,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Internal latency of request for rest_proxy",
           "tooltip": {
@@ -7881,7 +8035,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 107
+            "y": 162
           },
           "hiddenSeries": false,
           "id": 49,
@@ -7920,6 +8074,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Count of currently active connections",
           "tooltip": {
@@ -7971,7 +8126,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 107
+            "y": 162
           },
           "hiddenSeries": false,
           "id": 51,
@@ -8010,6 +8165,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "RPC latency",
           "tooltip": {
@@ -8061,7 +8217,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 113
+            "y": 168
           },
           "hiddenSeries": false,
           "id": 55,
@@ -8100,6 +8256,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Internal latency of request for schema_registry",
           "tooltip": {
@@ -8168,7 +8325,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 42
+            "y": 175
           },
           "hiddenSeries": false,
           "id": 43,
@@ -8208,6 +8365,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Rate - Number of leadership changes across all partitions of a given topic",
           "tooltip": {
@@ -8259,7 +8417,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 42
+            "y": 175
           },
           "hiddenSeries": false,
           "id": 45,
@@ -8298,6 +8456,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Bandwidth available for partition movement. bytes/sec",
           "tooltip": {
@@ -8366,7 +8525,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 67
+            "y": 182
           },
           "hiddenSeries": false,
           "id": 52,
@@ -8406,6 +8565,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Rate - Accumulated runtime of task queue associated with this scheduling group",
           "tooltip": {
@@ -8474,7 +8634,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 99
+            "y": 189
           },
           "hiddenSeries": false,
           "id": 56,
@@ -8513,6 +8673,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Disk storage bytes free.",
           "tooltip": {
@@ -8564,7 +8725,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 99
+            "y": 189
           },
           "hiddenSeries": false,
           "id": 58,
@@ -8603,6 +8764,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Status of low storage space alert. 0-OK, 1-Low Space 2-Degraded",
           "tooltip": {
@@ -8654,7 +8816,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 99
+            "y": 189
           },
           "hiddenSeries": false,
           "id": 59,
@@ -8693,6 +8855,7 @@
               "step": 10
             }
           ],
+          "thresholds": [],
           "timeRegions": [],
           "title": "Total size of attached storage, in bytes.",
           "tooltip": {
@@ -8814,7 +8977,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 45
+            "y": 196
           },
           "hiddenSeries": false,
           "id": 24,
@@ -8967,7 +9130,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 45
+            "y": 196
           },
           "hiddenSeries": false,
           "id": 26,
@@ -9120,7 +9283,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 45
+            "y": 196
           },
           "hiddenSeries": false,
           "id": 30,
@@ -9273,7 +9436,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 51
+            "y": 202
           },
           "hiddenSeries": false,
           "id": 36,
@@ -9426,7 +9589,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 51
+            "y": 202
           },
           "hiddenSeries": false,
           "id": 42,
@@ -9579,7 +9742,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 51
+            "y": 202
           },
           "hiddenSeries": false,
           "id": 53,
@@ -9732,7 +9895,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 57
+            "y": 208
           },
           "hiddenSeries": false,
           "id": 59,
@@ -9885,7 +10048,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 57
+            "y": 208
           },
           "hiddenSeries": false,
           "id": 65,
@@ -10038,7 +10201,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 57
+            "y": 208
           },
           "hiddenSeries": false,
           "id": 78,
@@ -10191,7 +10354,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 63
+            "y": 214
           },
           "hiddenSeries": false,
           "id": 85,
@@ -10344,7 +10507,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 63
+            "y": 214
           },
           "hiddenSeries": false,
           "id": 161,
@@ -10501,7 +10664,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 63
+            "y": 214
           },
           "hiddenSeries": false,
           "id": 95,
@@ -10654,7 +10817,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 69
+            "y": 220
           },
           "hiddenSeries": false,
           "id": 131,
@@ -10807,7 +10970,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 69
+            "y": 220
           },
           "hiddenSeries": false,
           "id": 89,
@@ -10958,7 +11121,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 69
+            "y": 220
           },
           "hiddenSeries": false,
           "id": 152,
@@ -11130,7 +11293,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 75
+            "y": 226
           },
           "hiddenSeries": false,
           "id": 132,
@@ -11287,7 +11450,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 75
+            "y": 226
           },
           "hiddenSeries": false,
           "id": 58,
@@ -11437,8 +11600,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -11453,7 +11615,7 @@
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 101
+            "y": 233
           },
           "id": 163,
           "options": {
@@ -11673,7 +11835,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -11704,6 +11866,6 @@
   "timezone": "",
   "title": "Redpanda Ops Dashboard",
   "uid": "FejE4c6nz",
-  "version": 8,
+  "version": 7,
   "weekStart": ""
 }
