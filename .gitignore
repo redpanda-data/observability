@@ -3,4 +3,5 @@ shelf/
 workspace.xml
 .idea/
 venv/
+.DS_Store
 
