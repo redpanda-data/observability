@@ -890,10 +890,10 @@
             "mode": "thresholds"
           },
           "mappings": [],
-          "max": -3,
+          "max": 1,
           "min": 0,
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
@@ -901,11 +901,11 @@
               },
               {
                 "color": "#EAB839",
-                "value": 75
+                "value": 0.75
               },
               {
                 "color": "red",
-                "value": 90
+                "value": 0.9
               }
             ]
           },
