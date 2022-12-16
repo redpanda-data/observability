@@ -2,7 +2,7 @@ version: '3.7'
 services:
   redpanda0:
     # NOTE: Please use the latest version here!
-    image: docker.redpanda.com/vectorized/redpanda:v22.3.4
+    image: docker.redpanda.com/vectorized/redpanda:latest
     container_name: redpanda-0
     command:
     - redpanda
@@ -31,7 +31,7 @@ services:
     - 28082:28082
   redpanda1:
     # NOTE: Please use the latest version here!
-    image: docker.redpanda.com/vectorized/redpanda:v22.3.4
+    image: docker.redpanda.com/vectorized/redpanda:latest
     container_name: redpanda-1
     command:
     - redpanda
@@ -60,7 +60,7 @@ services:
     - 9093:9093
   redpanda2:
     # NOTE: Please use the latest version here!
-    image: docker.redpanda.com/vectorized/redpanda:v22.3.4
+    image: docker.redpanda.com/vectorized/redpanda:latest
     container_name: redpanda-2
     command:
     - redpanda
