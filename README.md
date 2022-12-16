@@ -2,7 +2,7 @@
 This repository contains examples for configuring monitoring of RedPanda using Prometheus and Grafana.
 
 ---
-**NOTE**: This version is designed to work with the `public_metrics` endpoint that was introduced in Redpanda 22.2 and is provided by Redpanda Cloud. If you are running an older version of Redpanda please use the [legacy version](../legacy_metrics) of these dashboards.
+**NOTE**: This version is designed to work with the `public_metrics` endpoint that was introduced in Redpanda 22.2 and is provided by Redpanda Cloud. If you are running an older version of Redpanda please use the [legacy version](../../legacy_metrics) of these dashboards.
 
 ---
 ## Grafana Dashboards
