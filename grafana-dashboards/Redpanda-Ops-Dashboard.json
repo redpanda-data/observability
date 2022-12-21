@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "iteration": 1671104369911,
+  "id": 4,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -298,7 +298,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 4,
         "x": 8,
         "y": 3
@@ -360,6 +360,7 @@
               "type": "special"
             }
           ],
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -369,7 +370,7 @@
               }
             ]
           },
-          "unit": "none"
+          "unit": "Bps"
         },
         "overrides": []
       },
@@ -379,7 +380,7 @@
         "x": 12,
         "y": 3
       },
-      "id": 3,
+      "id": 23763572037,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -406,14 +407,14 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(redpanda_cluster_partitions) by ([[aggr_criteria]])",
+          "expr": "sum by([[aggr_criteria]])(rate(redpanda_kafka_request_bytes_total[1m]))",
           "interval": "",
           "legendFormat": "Partition count",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Partitions",
+      "title": "Throughput",
       "transparent": true,
       "type": "stat"
     },
@@ -572,6 +573,84 @@
         }
       ],
       "title": "Under replicated partitions by topic",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 7
+      },
+      "id": 3,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "max by([[aggr_criteria]])(redpanda_kafka_partitions{redpanda_cloud_data_cluster_name=~\"\"})",
+          "interval": "",
+          "legendFormat": "Partition count",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Partitions",
+      "transparent": true,
       "type": "stat"
     },
     {
@@ -965,7 +1044,7 @@
             "mode": "thresholds"
           },
           "mappings": [],
-          "max": 100,
+          "max": 1,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -976,11 +1055,11 @@
               },
               {
                 "color": "#EAB839",
-                "value": 75
+                "value": 0.75
               },
               {
                 "color": "red",
-                "value": 90
+                "value": 0.9
               }
             ]
           },
@@ -4736,6 +4815,6 @@
   "timezone": "",
   "title": "Redpanda Ops Dashboard",
   "uid": "FejE4c6nz",
-  "version": 2,
+  "version": 4,
   "weekStart": ""
 }
