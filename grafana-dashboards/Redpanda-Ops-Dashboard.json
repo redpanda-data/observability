@@ -24,7 +24,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 4,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -1124,6 +1123,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1609,6 +1610,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1770,6 +1773,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1908,6 +1913,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2062,6 +2069,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2223,6 +2232,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2362,6 +2373,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2506,6 +2519,268 @@
     },
     {
       "datasource": {
+        "type": "prometheus",
+        "uid": "grafana"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "id": 23763572039,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Redpanda Memory</h1>",
+        "mode": "html"
+      },
+      "pluginVersion": "",
+      "span": 1,
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Total allocated memory",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.75
+              },
+              {
+                "color": "red",
+                "value": 0.9
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 40
+      },
+      "id": 23763572040,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "redpanda_memory_allocated_memory / (redpanda_memory_free_memory + redpanda_memory_allocated_memory)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "title": "Allocated memory",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Free memory plus the memory occupied by the batch cache. This is how much memory Redpanda can allocate if needed after reclaim.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.1
+              },
+              {
+                "color": "yellow",
+                "value": 0.2
+              },
+              {
+                "color": "green",
+                "value": 0.3
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 40
+      },
+      "id": 23763572041,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "redpanda_memory_available_memory",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "title": "Available memory",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The lowest available memory over the lifetime of the node (the closest the node has been to out-of-memory).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.1
+              },
+              {
+                "color": "yellow",
+                "value": 0.2
+              },
+              {
+                "color": "green",
+                "value": 0.3
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 40
+      },
+      "id": 23763572042,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "redpanda_memory_available_memory_low_water_mark",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "title": "Available memory low watermark",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
         "type": "datasource",
         "uid": "grafana"
       },
@@ -2515,7 +2790,7 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 48
       },
       "id": 23763572004,
       "options": {
@@ -2544,6 +2819,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2613,7 +2890,7 @@
         "h": 15,
         "w": 6,
         "x": 0,
-        "y": 39
+        "y": 50
       },
       "id": 23763571998,
       "options": {
@@ -2676,6 +2953,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2745,7 +3024,7 @@
         "h": 15,
         "w": 6,
         "x": 6,
-        "y": 39
+        "y": 50
       },
       "id": 23763572000,
       "options": {
@@ -2805,6 +3084,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2874,7 +3155,7 @@
         "h": 15,
         "w": 6,
         "x": 12,
-        "y": 39
+        "y": 50
       },
       "id": 23763571999,
       "options": {
@@ -2934,6 +3215,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3003,7 +3286,7 @@
         "h": 15,
         "w": 6,
         "x": 18,
-        "y": 39
+        "y": 50
       },
       "id": 23763572001,
       "options": {
@@ -3062,6 +3345,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3131,7 +3416,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 54
+        "y": 65
       },
       "id": 4,
       "options": {
@@ -3190,6 +3475,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -3259,7 +3546,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 54
+        "y": 65
       },
       "id": 5,
       "options": {
@@ -3318,7 +3605,7 @@
         "h": 2,
         "w": 12,
         "x": 0,
-        "y": 60
+        "y": 71
       },
       "id": 6,
       "options": {
@@ -3346,7 +3633,7 @@
         "h": 2,
         "w": 12,
         "x": 12,
-        "y": 60
+        "y": 71
       },
       "id": 9,
       "options": {
@@ -3412,8 +3699,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3431,7 +3717,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 62
+        "y": 73
       },
       "hiddenSeries": false,
       "id": 7,
@@ -3572,8 +3858,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3591,7 +3876,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 62
+        "y": 73
       },
       "hiddenSeries": false,
       "id": 8,
@@ -3732,8 +4017,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3751,7 +4035,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 62
+        "y": 73
       },
       "hiddenSeries": false,
       "id": 10,
@@ -3890,8 +4174,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3909,7 +4192,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 62
+        "y": 73
       },
       "hiddenSeries": false,
       "id": 11,
@@ -4043,8 +4326,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -4060,7 +4342,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 68
+        "y": 79
       },
       "id": 156,
       "options": {
@@ -4122,8 +4404,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -4135,7 +4416,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 68
+        "y": 79
       },
       "id": 155,
       "options": {
@@ -4266,8 +4547,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -4298,7 +4578,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 77
+        "y": 88
       },
       "id": 23763572003,
       "options": {
@@ -4392,8 +4672,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-blue",
-                "value": null
+                "color": "light-blue"
               },
               {
                 "color": "red",
@@ -4503,7 +4782,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 77
+        "y": 88
       },
       "id": 23763572009,
       "options": {
@@ -4554,7 +4833,7 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 36,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -4581,7 +4860,7 @@
         "allFormat": "",
         "allValue": ".*",
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -4655,7 +4934,7 @@
         "allFormat": "",
         "allValue": ".*",
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -4738,7 +5017,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "None"
           ],
@@ -4815,6 +5094,6 @@
   "timezone": "",
   "title": "Redpanda Ops Dashboard",
   "uid": "FejE4c6nz",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }
