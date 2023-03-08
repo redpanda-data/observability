@@ -1,4 +1,59 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.3.6"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -24,7 +79,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 4,
+  "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -67,7 +122,7 @@
         "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Redpanda Summary</h1>",
         "mode": "html"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "span": 1,
       "transparent": true,
       "type": "text"
@@ -135,7 +190,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -241,7 +296,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -321,7 +376,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -398,7 +453,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -472,7 +527,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -556,7 +611,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -633,7 +688,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -708,7 +763,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -806,7 +861,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -936,7 +991,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -1011,7 +1066,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -1086,7 +1141,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -1124,6 +1179,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1448,7 +1505,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -1580,7 +1637,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
@@ -1609,6 +1666,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1770,6 +1829,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1908,6 +1969,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2062,6 +2125,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2223,6 +2288,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2362,6 +2429,8 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -2577,8 +2646,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2709,8 +2777,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2838,8 +2905,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2967,8 +3033,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3095,8 +3160,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3223,8 +3287,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3412,8 +3475,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3572,8 +3634,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3732,8 +3793,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3890,8 +3950,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -4043,8 +4102,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -4122,8 +4180,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -4266,8 +4323,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           },
@@ -4392,8 +4448,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "light-blue",
-                "value": null
+                "color": "light-blue"
               },
               {
                 "color": "red",
@@ -4554,7 +4609,7 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 36,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -4562,8 +4617,8 @@
       {
         "current": {
           "selected": false,
-          "text": "prometheus",
-          "value": "prometheus"
+          "text": "Prometheus",
+          "value": "Prometheus"
         },
         "hide": 0,
         "includeAll": false,
@@ -4580,15 +4635,7 @@
       {
         "allFormat": "",
         "allValue": ".*",
-        "current": {
-          "selected": false,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
@@ -4617,15 +4664,7 @@
       {
         "allFormat": "",
         "allValue": ".*",
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
@@ -4654,15 +4693,7 @@
       {
         "allFormat": "",
         "allValue": ".*",
-        "current": {
-          "selected": false,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
@@ -4737,15 +4768,7 @@
         "type": "custom"
       },
       {
-        "current": {
-          "selected": false,
-          "text": [
-            "None"
-          ],
-          "value": [
-            ""
-          ]
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
@@ -4815,6 +4838,6 @@
   "timezone": "",
   "title": "Redpanda Ops Dashboard",
   "uid": "FejE4c6nz",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }

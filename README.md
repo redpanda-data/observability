@@ -41,28 +41,15 @@ To get started it is as simple as running the docker compose file:
 ```commandline
 $ cd demo
 $ docker-compose up -d
-Creating network "demo_default" with the default driver
-Creating redpanda-0 ... done
-Creating redpanda-1 ... done
-Creating redpanda-2 ... done
-Creating grafana    ... done
-Creating console    ... done
-Creating prometheus ... done
-```
-Note: If you wish to include the Owlshop demo, you may include the separate Owlshop docker compose file, replacing the
-above command as follows:
-```commandline
-$ cd demo
-$  docker compose -f docker-compose.yml -f docker-compose-owlshop -d
-Creating network "demo_default" with the default driver
-[+] Running 8/8
- ⠿ Container redpanda-1       Started                                                                                                                                                                                              0.5s
- ⠿ Container redpanda-2       Started                                                                                                                                                                                              0.5s
- ⠿ Container grafana          Started                                                                                                                                                                                              0.7s
- ⠿ Container redpanda-0       Started                                                                                                                                                                                              0.7s
- ⠿ Container prometheus       Started                                                                                                                                                                                              0.6s
- ⠿ Container demo-owl-shop-1  Started                                                                                                                                                                                              1.1s
- ⠿ Container demo-console-1   Started                                                                                                                                                                                              1.2s
+[+] Running 9/9
+ ⠿ Network demo_default       Created
+ ⠿ Container grafana          Started
+ ⠿ Container prometheus       Started
+ ⠿ Container redpanda-1       Started
+ ⠿ Container redpanda-0       Started
+ ⠿ Container redpanda-2       Started
+ ⠿ Container demo-owl-shop-1  Started
+ ⠿ Container demo-console-1   Started
  ⠿ Container connect          Started
 ```
 
@@ -139,3 +126,4 @@ docker exec -t redpanda-0 rpk topic consume test_topic --group singleGroup
 ```commandline
 rpk topic consume test_topic --group singleGroup --brokers localhost:9092 
 ```
+
