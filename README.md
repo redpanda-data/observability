@@ -1,5 +1,5 @@
 # Monitoring
-This repository contains examples for configuring monitoring of RedPanda using Prometheus and Grafana.
+This repository contains examples for configuring monitoring of Redpanda using Prometheus and Grafana.
 
 ---
 **NOTE**: This version is designed to work with the `public_metrics` endpoint that was introduced in Redpanda 22.2 and is provided by Redpanda Cloud. If you are running an older version of Redpanda please use the [legacy version](../../tree/legacy_metrics) of these dashboards.
@@ -11,7 +11,7 @@ Grafana or Grafana Cloud instance.
 
 The following dashboards are provided as examples:
 
-- [Redpanda Ops Dashboard](grafana-dashboards/Redpanda-Ops-Dashboard.json) - Provides an overview of KPIs for a RedPanda
+- [Redpanda Ops Dashboard](grafana-dashboards/Redpanda-Ops-Dashboard.json) - Provides an overview of KPIs for a Redpanda
 cluster with health indicators. This is suitable for ops or SRE to montior on a daily or continuous basis.
 - [Kafka Topic Metrics](grafana-dashboards/Kafka-Topic-Metrics.json) - Provides throughput, read/write rates and 
 on-disk sizes of each/all topics.
@@ -31,7 +31,7 @@ consumers, using the [Prometheus JMX Exporter](https://github.com/prometheus/jmx
 ![](docs/images/Topic%20Metrics.png)
 
 ## Sandbox Environment
-The [demo](demo) folder includes a full dockerized sandbox, that will spin up a three-node RedPanda cluster, an instance
+The [demo](demo) folder includes a full dockerized sandbox, that will spin up a three-node Redpanda cluster, an instance
 of Redpanda Console, a Prometheus instance and a Grafana instance with Prometheus and Grafana configured with the
 dasboards in the [grafana-dashboards](grafana-dashboards) folder.
 
@@ -53,7 +53,7 @@ $ docker-compose up -d
  ⠿ Container connect          Started
 ```
 
-You can check the status of the RedPanda cluster using the following command:
+You can check the status of the Redpanda cluster using the following command:
 ```commandline
 $ docker exec -it redpanda-0 rpk cluster status
 CLUSTER
@@ -84,7 +84,7 @@ ID    HOST        PORT
 
 ```
 You should now be able to open the following URIs in your browser for each service:
-- RedPanda Console: [http://localhost:8080/](http://localhost:8080/])
+- Redpanda Console: [http://localhost:8080/](http://localhost:8080/])
 - Prometheus: [http://localhost:9090](http://localhost:9090])
 - Grafana: [http://localhost:3000](http://localhost:3000])
 
@@ -93,7 +93,7 @@ see the imported dashboards described above.
 
 ### Running A Sample Workload
 
-To generate a workload in RedPanda we can use the following commands. We have provided one version that uses `rpk` 
+To generate a workload in Redpanda we can use the following commands. We have provided one version that uses `rpk` 
 installed locally on your machine, and one where you use `rpk` running inside on of the docker containers.
 
 You can install `rpk` locally on a Mac using the [instructions here](https://docs.redpanda.com/docs/quickstart/quick-start-macos/#installing-rpk). 
