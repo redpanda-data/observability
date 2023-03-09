@@ -30,12 +30,14 @@ consumers, using the [Prometheus JMX Exporter](https://github.com/prometheus/jmx
 ![](docs/images/Consumer%20Offsets.png)
 ![](docs/images/Topic%20Metrics.png)
 
-## Sandbox Environment
+## Examples
+
+### Sandbox Environment
 The [demo](demo) folder includes a full dockerized sandbox, that will spin up a three-node Redpanda cluster, an instance
 of Redpanda Console, a Prometheus instance and a Grafana instance with Prometheus and Grafana configured with the
 dasboards in the [grafana-dashboards](grafana-dashboards) folder.
 
-## Redpanda Cloud
+### Redpanda Cloud
 The [cloud](cloud) folder has a Docker Compose file that will bring up Prometheus and Grafana, with instructions on
 how to scrape the Prometheus endpoint exposed by your Redpanda Cloud cluster.
 
