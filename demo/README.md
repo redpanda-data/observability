@@ -1,5 +1,4 @@
 # Sandbox
-
 This example contains a fully dockerized sandbox with:
 * A 3-node Redpanda cluster
 * Redpanda Console
@@ -8,8 +7,7 @@ This example contains a fully dockerized sandbox with:
 * Kafka Connect. Used here to showcase the Kafka producer/consumer dashboards
 * Owl Shop. A mock e-commerce application that generates data.
 
-### Setup
-
+## Setup
 To get started it is as simple as running the docker compose file:
 
 ```commandline
