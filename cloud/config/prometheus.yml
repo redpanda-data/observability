@@ -6,12 +6,12 @@ scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   # Replace the section below with what you've copied from `Prometheus YAML`
   # in the "Redpanda Cloud > Overview > How to connect" Screen
-- job_name: redpandaCloud-yourclustername
+- job_name: <<jobname>>
   static_configs:
     - targets:
-        - console-yourhostname.cloud.redpanda.com
+        - <<hostname for endpoint>>
   metrics_path: /api/cloud/prometheus/public_metrics
   basic_auth:
     username: prometheus
-    password: yourpassword
+    password: <<password>>
   scheme: https
