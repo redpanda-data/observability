@@ -48,6 +48,8 @@ The Redpanda Cloud Overview page contains details on how to configure Prometheus
 metrics from the cluster. To view this information, go to ** Overview > How to connect > Prometheus **.
 You should see something like the following:
 
+![Prometheus Endpoint Info](images/prometheus-info-screen.png)
+
 Click on the icon to the right to copy the contents of **Prometheus YAML** into your clipboard.
 
 ## Edit `config/prometheus.yml`
