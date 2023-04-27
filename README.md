@@ -12,8 +12,8 @@ Grafana or Grafana Cloud instance.
 The following dashboards are provided as examples:
 
 - [Redpanda Ops Dashboard](grafana-dashboards/Redpanda-Ops-Dashboard.json) - Provides an overview of KPIs for a Redpanda
-cluster with health indicators. This is suitable for ops or SRE to montior on a daily or continuous basis.
-- [Kafka Topic Metrics](grafana-dashboards/Kafka-Topic-Metrics.json) - Provides throughput, read/write rates and 
+cluster with health indicators. This is suitable for ops or SRE to monitor on a daily or continuous basis.
+- [Kafka Topic Metrics](grafana-dashboards/Kafka-Topic-Metrics.json) - Provides throughput, read/write rates, and 
 on-disk sizes of each/all topics.
 - [Kafka Consumer Offsets](grafana-dashboards/Kafka%20Consumer%20Offsets.json) - Metrics and KPIs that provide details 
 of topic consumers and how far they are lagging behind the end of the log.
@@ -39,5 +39,5 @@ dasboards in the [grafana-dashboards](grafana-dashboards) folder.
 
 ### Redpanda Cloud
 The [cloud](cloud) folder has a Docker Compose file that will bring up Prometheus and Grafana, with instructions on
-how to scrape the Prometheus endpoint exposed by your Redpanda Cloud cluster.
+how to scrape the Prometheus endpoint exposed by your Redpanda Cloud cluster
 
