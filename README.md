@@ -30,100 +30,14 @@ consumers, using the [Prometheus JMX Exporter](https://github.com/prometheus/jmx
 ![](docs/images/Consumer%20Offsets.png)
 ![](docs/images/Topic%20Metrics.png)
 
-## Sandbox Environment
+## Examples
+
+### Sandbox Environment
 The [demo](demo) folder includes a full dockerized sandbox, that will spin up a three-node Redpanda cluster, an instance
 of Redpanda Console, a Prometheus instance and a Grafana instance with Prometheus and Grafana configured with the
 dasboards in the [grafana-dashboards](grafana-dashboards) folder.
 
-### Setup
-To get started it is as simple as running the docker compose file:
-
-```commandline
-$ cd demo
-$ docker-compose up -d
-[+] Running 9/9
- ⠿ Network demo_default       Created
- ⠿ Container grafana          Started
- ⠿ Container prometheus       Started
- ⠿ Container redpanda-1       Started
- ⠿ Container redpanda-0       Started
- ⠿ Container redpanda-2       Started
- ⠿ Container demo-owl-shop-1  Started
- ⠿ Container demo-console-1   Started
- ⠿ Container connect          Started
-```
-
-You can check the status of the Redpanda cluster using the following command:
-```commandline
-$ docker exec -it redpanda-0 rpk cluster status
-CLUSTER
-=======
-redpanda.initializing
-
-BROKERS
-=======
-ID    HOST        PORT
-0*    redpanda-0  29092
-1     redpanda-1  29093
-2     redpanda-2  29094
-
-```
-Once the bootstrap is complete, you should see all three nodes running and the cluster's UUID displayed.
-```commandline
-$docker exec -it redpanda-0 rpk cluster status
-CLUSTER
-=======
-redpanda.initializing
-
-BROKERS
-=======
-ID    HOST        PORT
-0*    redpanda-0  29092
-1     redpanda-1  29093
-2     redpanda-2  29094
-
-```
-You should now be able to open the following URIs in your browser for each service:
-- Redpanda Console: [http://localhost:8080/](http://localhost:8080/])
-- Prometheus: [http://localhost:9090](http://localhost:9090])
-- Grafana: [http://localhost:3000](http://localhost:3000])
-
-Once you log into Grafana, click on the Dashboards icon on the left and select Browse. From there, you should be able to
-see the imported dashboards described above.
-
-### Running A Sample Workload
-
-To generate a workload in Redpanda we can use the following commands. We have provided one version that uses `rpk` 
-installed locally on your machine, and one where you use `rpk` running inside on of the docker containers.
-
-You can install `rpk` locally on a Mac using the [instructions here](https://docs.redpanda.com/docs/quickstart/quick-start-macos/#installing-rpk). 
-
-### Create a Topic
-#### Local rpk
-```rpk topic create test_topic -r 3 -p 4 --brokers localhost:9092```
-#### Docker
-```docker exec redpanda-0 rpk topic create test_topic -r 3 -p 4```
-
-### Create some producers and consumers
-In this section we're going to stream some data from the Wikimedia changelog using Curl.
-
-#### Local rpk
-Set up Producer:
-```commandline
-curl --retry 9999 -s -H 'Accept: application/json'  https://stream.wikimedia.org/v2/stream/recentchange |  rpk --brokers localhost:9092 topic produce test_topic -o ''
-```
-Set up one or more consumers (you can run this command in multiple windows, although the topic we created only has 4 
-partitions, only the first 4 will consume any data).
-```commandline
-docker exec -it redpanda-0 rpk topic consume test_topic --group singleGroup 
-```
-Set up one or more consumers (you can run this command in multiple windows, although the topic we created only has 4 
-partitions, only the first 4 will consume any data).
-#### Docker
-```commandline
-docker exec -t redpanda-0 rpk topic consume test_topic --group singleGroup 
-```
-```commandline
-rpk topic consume test_topic --group singleGroup --brokers localhost:9092 
-```
+### Redpanda Cloud
+The [cloud](cloud) folder has a Docker Compose file that will bring up Prometheus and Grafana, with instructions on
+how to scrape the Prometheus endpoint exposed by your Redpanda Cloud cluster
 
