@@ -2,6 +2,7 @@ apiVersion: 1
 
 datasources:
   - name: prometheus
+    uid: P1809F7CD0C75ACF3
     type: prometheus
     access: proxy
     httpMethod: POST

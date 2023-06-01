@@ -1,0 +1,14 @@
+
+route:
+  receiver: 'mailhog'
+  repeat_interval: 4h
+  group_by: [ alertname ]
+
+
+receivers:
+  - name: 'mailhog'
+    email_configs:
+      - smarthost: 'mailhog:1025'
+        from: 'alertmanager@observability-demo.redpanda.com'
+        to: 'recipient@observability-demo.redpanda.com'
+        require_tls: false

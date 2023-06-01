@@ -1,0 +1,90 @@
+uid:
+title:
+condition: C
+data:
+  - refId: A
+    relativeTimeRange:
+      from: 900
+      to: 0
+    datasourceUid:
+    model:
+      datasource:
+          type: prometheus
+          uid:
+      exemplar: true
+      expr:
+      hide: false
+      interval: ""
+      intervalFactor: 1
+      intervalMs: 15000
+      legendFormat: Nodes Up
+      maxDataPoints: 100
+      refId: A
+      step: 40
+  - refId: B
+    relativeTimeRange:
+      from: 900
+      to: 0
+    datasourceUid: __expr__
+    model:
+      conditions:
+          - evaluator:
+              params: []
+              type: gt
+            operator:
+              type: and
+            query:
+              params:
+                  - B
+            reducer:
+              params: []
+              type: last
+            type: query
+      datasource:
+          type: __expr__
+          uid: __expr__
+      expression: A
+      hide: false
+      intervalMs: 1000
+      maxDataPoints: 43200
+      reducer: last
+      refId: B
+      settings:
+        mode: replaceNN
+        replaceWithValue: 0
+      type: reduce
+  - refId: C
+    relativeTimeRange:
+      from: 900
+      to: 0
+    datasourceUid: __expr__
+    model:
+      conditions:
+          - evaluator:
+              params:
+                  - 5
+              type: lt
+            operator:
+              type: and
+            query:
+              params:
+                  - C
+            reducer:
+              params: []
+              type: last
+            type: query
+      datasource:
+          type: __expr__
+          uid: __expr__
+      expression: B
+      hide: false
+      intervalMs: 1000
+      maxDataPoints: 43200
+      refId: C
+      type: threshold
+noDataState: NoData
+execErrState: Error
+for:
+annotations:
+labels:
+isPaused: false

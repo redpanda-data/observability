@@ -15,3 +15,13 @@ scrape_configs:
   - targets:
     - connect:9010
   metrics_path: /
+
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets:
+          - alertmanager:9093
+
+rule_files:
+  - /etc/prometheus/alert-rules.yml
