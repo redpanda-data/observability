@@ -1,0 +1,289 @@
+rules:
+- alert: Brokers are down
+  uid: c6f9ef08-5b6e-49b6-8b10-d55f40fbf719
+  folder: Redpanda Critical
+  evaluation_group: critical
+  expr: sum(max_over_time(redpanda_cluster_brokers[30d])) - sum(up{job='redpanda'})
+  comparison: gt
+  threshold: 0
+  for: 1m
+  labels:
+    severity: critical
+  annotations:
+    summary: "The number of active brokers has been too low for more than 1 minute."
+- alert: Brokers are down (alternative)
+  uid: a32ac38d-8553-4708-a227-956720856af0
+  folder: Redpanda Critical
+  evaluation_group: critical
+  expr: (max_over_time(count(redpanda_application_uptime_seconds_total)[1w:])) - (count(redpanda_application_uptime_seconds_total) or on () vector(0))
+  comparison: gt
+  threshold: 0
+  for: 1m
+  labels:
+    severity: critical
+  annotations:
+    summary: "The number of active brokers has been too low for more than 1 minute."
+- alert: Storage is degraded
+  uid: 6a936f22-882d-421a-8e3d-4039387e4670
+  folder: Redpanda Critical
+  evaluation_group: critical
+  expr: redpanda_storage_disk_free_space_alert
+  comparison: gt
+  threshold: 1
+  for: 1m
+  labels:
+    severity: critical
+  annotations:
+    summary: "Redpanda is alerting that storage is degraded for more than 1 minute, resulting in writes being rejected."
+- alert: Storage - there is less than 1 GiB of free space
+  uid: 6c741284-d04f-4dd4-80b9-cdba8916e936
+  folder: Redpanda Critical
+  evaluation_group: critical
+  expr: redpanda_storage_disk_free_bytes
+  comparison: lt
+  threshold: 1073741824
+  for: 1m
+  labels:
+    severity: critical
+  annotations:
+    summary: "There is less than 1 GiB free space available for more than 1 minute."
+- alert: Leaderless Partitions
+  uid: 64622530-7b51-4ba3-9463-d6ea9b50903a
+  folder: Redpanda Critical
+  evaluation_group: critical
+  expr: redpanda_cluster_unavailable_partitions
+  comparison: gt
+  threshold: 0
+  for: 1m
+  labels:
+    severity: critical
+  annotations:
+    summary: "There are leaderless partitions for more than 1 minute, so some data may be unavailable."
+- alert: Low Memory
+  uid: a9530700-4b13-4264-9fd3-6fa042f74c6d
+  folder: Redpanda Critical
+  evaluation_group: critical
+  expr: redpanda_memory_available_memory
+  comparison: lt
+  threshold: 1073741824
+  for: 1m
+  labels:
+    severity: critical
+  annotations:
+    summary: "There is less than 1 GiB memory available for more than 1 minute."
+- alert: Storage Alert - Low Space
+  uid: 38e89a48-249a-4709-bbcc-37698e474979
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: redpanda_storage_disk_free_space_alert
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Redpanda is alerting that space is too low for over 5 minutes."
+- alert: Under-replicated partitions
+  uid: 0887a359-e688-424d-8da0-de97d15dad63
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: redpanda_kafka_under_replicated_replicas
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "There have been under-replicated partitions for over 5 minutes."
+- alert: Storage space is predicted to be less than 1 GiB in 30 minutes
+  uid: d6e142d2-cbfa-47ba-97f2-a025c1e859b4
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: predict_linear(redpanda_storage_disk_free_bytes[1h], 1800)
+  comparison: lt
+  threshold: 1073741824
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Storage space has been consistently predicted to be less than 1 GiB (in one hour), for over 5 minutes."
+- alert: Memory is predicted to be less than 1 GiB in one hour
+  uid: f7ae9b13-8019-45b2-a3fd-395f1619a1ce
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: predict_linear(redpanda_memory_available_memory[30m], 1800)
+  comparison: lt
+  threshold: 1073741824
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Memory has been consistently predicted to be less than 1 GiB (in one hour), for over 5 minutes."
+- alert: More than 1% of Schema Registry requests results in an error
+  uid: 38720ef1-db87-470b-aa40-ba1c01c03ec1
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: 100 * (sum by (instance) (rate(redpanda_schema_registry_request_errors_total[5m])) / sum by (instance) (rate(redpanda_schema_registry_request_latency_seconds_count[5m])))
+  comparison: gt
+  threshold: 1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "More than 1% of Schema Registry requests results in an error, for over 5 minutes."
+- alert: More than 1% of RPC requests results in an error
+  uid: 1fa48d99-c597-4f9f-85b5-82f7bca1bd18
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: 100 * (sum by (instance) (rate(redpanda_rpc_request_errors_total[5m])) / sum by (instance) (rate(redpanda_rpc_request_latency_seconds_count[5m])))
+  comparison: gt
+  threshold: 1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "More than 1% of RPC requests results in an error, for over 5 minutes."
+- alert: More than 1% of REST requests results in an error
+  uid: 15337901-3519-4cd8-a9a8-da2f3b05cf3f
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: 100 * (sum by (instance) (rate(redpanda_rest_proxy_request_errors_total[5m])) / sum by (instance) (rate(redpanda_rest_proxy_request_latency_seconds_count[5m])))
+  comparison: gt
+  threshold: 1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "More than 1% of REST requests results in an error, for over 5 minutes."
+- alert: More than 1% of Raft RPC requests results in an error
+  uid: 84b666cf-6acc-4931-a6d9-d7ef55b4df93
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: 100 * (sum by (instance) (rate(redpanda_node_status_rpcs_timed_out[5m])) / sum by (instance) (rate(redpanda_node_status_rpcs_sent[5m])))
+  comparison: gt
+  threshold: 1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "More than 1% of Raft RPC requests results in an error, for over 5 minutes."
+- alert: Raft leadership is continually changing
+  uid: 68230e62-122f-43ad-96bc-8fd8cabf9b75
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: rate(redpanda_raft_leadership_changes[1m])
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Raft leadership is continually changing, rather than settling into a stable distribution, for over 5 minutes."
+- alert: Kafka request latency is too high
+  uid: 0ffa0b3a-5b6d-4247-aa0a-e3d012dbea9c
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_request_latency_seconds_bucket[5m])))
+  comparison: gt
+  threshold: 0.1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Kafka request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: RPC request latency is too high
+  uid: 66d78acb-1a09-49e2-8fcb-080f6180af28
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_rpc_request_latency_seconds_bucket[5m])))
+  comparison: gt
+  threshold: 0.1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "RPC request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: REST request latency is too high
+  uid: 4eb69c6f-15c7-47b2-a15b-caf12b43dd24
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_rest_proxy_request_latency_seconds_bucket[5m])))
+  comparison: gt
+  threshold: 0.1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "REST request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: Schema Registry request latency is too high
+  uid: 26861082-1112-4a0f-9929-a0cac66e568b
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_schema_registry_request_latency_seconds_bucket[5m])))
+  comparison: gt
+  threshold: 0.1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Schema Registry request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: Storage - there is less than 10 GiB of free space
+  uid: 9f83f219-2d53-4c15-80c4-2ee4637eadbc
+  folder: Redpanda Moderate
+  evaluation_group: moderate
+  expr: redpanda_storage_disk_free_bytes
+  comparison: lt
+  threshold: 1073741824
+  for: 5m
+  labels:
+    severity: medium
+  annotations:
+    summary: "There is less than 10 GiB free space available for more than 5 minutes."
+- alert: Schema Registry errors are increasing
+  uid: dd76c0ad-72d1-4a4e-811d-0bca0a71cbcf
+  folder: Redpanda Moderate
+  evaluation_group: moderate
+  expr: increase(redpanda_schema_registry_request_errors_total[1m])
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: medium
+  annotations:
+    summary: "Schema Registry errors are increasing for more than 5 minutes."
+- alert: RPC errors are increasing
+  uid: 8b788eff-bef7-42e1-8474-1f4704a06bb7
+  folder: Redpanda Moderate
+  evaluation_group: moderate
+  expr: increase(redpanda_rpc_request_errors_total[1m])
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: medium
+  annotations:
+    summary: "RPC errors are increasing for more than 5 minutes."
+- alert: REST Proxy errors are increasing
+  uid: 067b4155-d360-4333-9557-c2c0b5fbed9a
+  folder: Redpanda Moderate
+  evaluation_group: moderate
+  expr: increase(redpanda_rest_proxy_request_errors_total[1m])
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: medium
+  annotations:
+    summary: "REST Proxy errors are increasing for more than 5 minutes."
+- alert: Raft RPC errors are increasing
+  uid: eaee0ebc-ecfb-4ff2-8be5-25081d83d436
+  folder: Redpanda Moderate
+  evaluation_group: moderate
+  expr: increase(redpanda_node_status_rpcs_timed_out[1m]) OR on() vector(0)
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: medium
+  annotations:
+    summary: "Raft RPC errors are increasing for more than 5 minutes."

@@ -1,0 +1,2225 @@
+apiVersion: 1
+groups:
+- folder: Redpanda Critical
+  interval: 1m
+  name: Redpanda Critical
+  orgId: 1
+  rules:
+  - annotations:
+      summary: The number of active brokers has been too low for more than 1 minute.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: sum(max_over_time(redpanda_cluster_brokers[30d])) - sum(up{job='redpanda'})
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 1m
+    isPaused: false
+    labels:
+      severity: critical
+    noDataState: NoData
+    title: Brokers are down
+    uid: c6f9ef08-5b6e-49b6-8b10-d55f40fbf719
+  - annotations:
+      summary: The number of active brokers has been too low for more than 1 minute.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: (max_over_time(count(redpanda_application_uptime_seconds_total)[1w:])) - (count(redpanda_application_uptime_seconds_total) or on () vector(0))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 1m
+    isPaused: false
+    labels:
+      severity: critical
+    noDataState: NoData
+    title: Brokers are down (alternative)
+    uid: a32ac38d-8553-4708-a227-956720856af0
+  - annotations:
+      summary: Redpanda is alerting that storage is degraded for more than 1 minute, resulting in writes being rejected.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: redpanda_storage_disk_free_space_alert
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 1m
+    isPaused: false
+    labels:
+      severity: critical
+    noDataState: NoData
+    title: Storage is degraded
+    uid: 6a936f22-882d-421a-8e3d-4039387e4670
+  - annotations:
+      summary: There is less than 1 GiB free space available for more than 1 minute.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: redpanda_storage_disk_free_bytes
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1073741824
+            type: lt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 1m
+    isPaused: false
+    labels:
+      severity: critical
+    noDataState: NoData
+    title: Storage - there is less than 1 GiB of free space
+    uid: 6c741284-d04f-4dd4-80b9-cdba8916e936
+  - annotations:
+      summary: There are leaderless partitions for more than 1 minute, so some data may be unavailable.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: redpanda_cluster_unavailable_partitions
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 1m
+    isPaused: false
+    labels:
+      severity: critical
+    noDataState: NoData
+    title: Leaderless Partitions
+    uid: 64622530-7b51-4ba3-9463-d6ea9b50903a
+  - annotations:
+      summary: There is less than 1 GiB memory available for more than 1 minute.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: redpanda_memory_available_memory
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1073741824
+            type: lt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 1m
+    isPaused: false
+    labels:
+      severity: critical
+    noDataState: NoData
+    title: Low Memory
+    uid: a9530700-4b13-4264-9fd3-6fa042f74c6d
+- folder: Redpanda Severe
+  interval: 1m
+  name: Redpanda Severe
+  orgId: 1
+  rules:
+  - annotations:
+      summary: Redpanda is alerting that space is too low for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: redpanda_storage_disk_free_space_alert
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: Storage Alert - Low Space
+    uid: 38e89a48-249a-4709-bbcc-37698e474979
+  - annotations:
+      summary: There have been under-replicated partitions for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: redpanda_kafka_under_replicated_replicas
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: Under-replicated partitions
+    uid: 0887a359-e688-424d-8da0-de97d15dad63
+  - annotations:
+      summary: Storage space has been consistently predicted to be less than 1 GiB (in one hour), for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: predict_linear(redpanda_storage_disk_free_bytes[1h], 1800)
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1073741824
+            type: lt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: Storage space is predicted to be less than 1 GiB in 30 minutes
+    uid: d6e142d2-cbfa-47ba-97f2-a025c1e859b4
+  - annotations:
+      summary: Memory has been consistently predicted to be less than 1 GiB (in one hour), for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: predict_linear(redpanda_memory_available_memory[30m], 1800)
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1073741824
+            type: lt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: Memory is predicted to be less than 1 GiB in one hour
+    uid: f7ae9b13-8019-45b2-a3fd-395f1619a1ce
+  - annotations:
+      summary: More than 1% of Schema Registry requests results in an error, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: 100 * (sum by (instance) (rate(redpanda_schema_registry_request_errors_total[5m])) / sum by (instance) (rate(redpanda_schema_registry_request_latency_seconds_count[5m])))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: More than 1% of Schema Registry requests results in an error
+    uid: 38720ef1-db87-470b-aa40-ba1c01c03ec1
+  - annotations:
+      summary: More than 1% of RPC requests results in an error, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: 100 * (sum by (instance) (rate(redpanda_rpc_request_errors_total[5m])) / sum by (instance) (rate(redpanda_rpc_request_latency_seconds_count[5m])))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: More than 1% of RPC requests results in an error
+    uid: 1fa48d99-c597-4f9f-85b5-82f7bca1bd18
+  - annotations:
+      summary: More than 1% of REST requests results in an error, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: 100 * (sum by (instance) (rate(redpanda_rest_proxy_request_errors_total[5m])) / sum by (instance) (rate(redpanda_rest_proxy_request_latency_seconds_count[5m])))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: More than 1% of REST requests results in an error
+    uid: 15337901-3519-4cd8-a9a8-da2f3b05cf3f
+  - annotations:
+      summary: More than 1% of Raft RPC requests results in an error, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: 100 * (sum by (instance) (rate(redpanda_node_status_rpcs_timed_out[5m])) / sum by (instance) (rate(redpanda_node_status_rpcs_sent[5m])))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: More than 1% of Raft RPC requests results in an error
+    uid: 84b666cf-6acc-4931-a6d9-d7ef55b4df93
+  - annotations:
+      summary: Raft leadership is continually changing, rather than settling into a stable distribution, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: rate(redpanda_raft_leadership_changes[1m])
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: Raft leadership is continually changing
+    uid: 68230e62-122f-43ad-96bc-8fd8cabf9b75
+  - annotations:
+      summary: Kafka request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_request_latency_seconds_bucket[5m])))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0.1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: Kafka request latency is too high
+    uid: 0ffa0b3a-5b6d-4247-aa0a-e3d012dbea9c
+  - annotations:
+      summary: RPC request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_rpc_request_latency_seconds_bucket[5m])))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0.1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: RPC request latency is too high
+    uid: 66d78acb-1a09-49e2-8fcb-080f6180af28
+  - annotations:
+      summary: REST request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_rest_proxy_request_latency_seconds_bucket[5m])))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0.1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: REST request latency is too high
+    uid: 4eb69c6f-15c7-47b2-a15b-caf12b43dd24
+  - annotations:
+      summary: Schema Registry request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_schema_registry_request_latency_seconds_bucket[5m])))
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0.1
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: high
+    noDataState: NoData
+    title: Schema Registry request latency is too high
+    uid: 26861082-1112-4a0f-9929-a0cac66e568b
+- folder: Redpanda Moderate
+  interval: 1m
+  name: Redpanda Moderate
+  orgId: 1
+  rules:
+  - annotations:
+      summary: There is less than 10 GiB free space available for more than 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: redpanda_storage_disk_free_bytes
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 1073741824
+            type: lt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: medium
+    noDataState: NoData
+    title: Storage - there is less than 10 GiB of free space
+    uid: 9f83f219-2d53-4c15-80c4-2ee4637eadbc
+  - annotations:
+      summary: Schema Registry errors are increasing for more than 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: increase(redpanda_schema_registry_request_errors_total[1m])
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: medium
+    noDataState: NoData
+    title: Schema Registry errors are increasing
+    uid: dd76c0ad-72d1-4a4e-811d-0bca0a71cbcf
+  - annotations:
+      summary: RPC errors are increasing for more than 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: increase(redpanda_rpc_request_errors_total[1m])
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: medium
+    noDataState: NoData
+    title: RPC errors are increasing
+    uid: 8b788eff-bef7-42e1-8474-1f4704a06bb7
+  - annotations:
+      summary: REST Proxy errors are increasing for more than 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: increase(redpanda_rest_proxy_request_errors_total[1m])
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: medium
+    noDataState: NoData
+    title: REST Proxy errors are increasing
+    uid: 067b4155-d360-4333-9557-c2c0b5fbed9a
+  - annotations:
+      summary: Raft RPC errors are increasing for more than 5 minutes.
+    condition: C
+    data:
+    - datasourceUid: P1809F7CD0C75ACF3
+      model:
+        datasource:
+          type: prometheus
+          uid: P1809F7CD0C75ACF3
+        exemplar: true
+        expr: increase(redpanda_node_status_rpcs_timed_out[1m]) OR on() vector(0)
+        hide: false
+        interval: ''
+        intervalFactor: 1
+        intervalMs: 15000
+        legendFormat: Nodes Up
+        maxDataPoints: 100
+        refId: A
+        step: 40
+      refId: A
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params: []
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - B
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        reducer: last
+        refId: B
+        settings:
+          mode: replaceNN
+          replaceWithValue: 0
+        type: reduce
+      refId: B
+      relativeTimeRange:
+        from: 900
+        to: 0
+    - datasourceUid: __expr__
+      model:
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: B
+        hide: false
+        intervalMs: 1000
+        maxDataPoints: 43200
+        refId: C
+        type: threshold
+      refId: C
+      relativeTimeRange:
+        from: 900
+        to: 0
+    execErrState: Error
+    for: 5m
+    isPaused: false
+    labels:
+      severity: medium
+    noDataState: NoData
+    title: Raft RPC errors are increasing
+    uid: eaee0ebc-ecfb-4ff2-8be5-25081d83d436

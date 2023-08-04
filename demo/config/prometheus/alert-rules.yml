@@ -1,0 +1,171 @@
+groups:
+- name: alert.rules
+  rules:
+  - alert: Brokers are down
+    annotations:
+      summary: The number of active brokers has been too low for more than 1 minute.
+    expr: (sum(max_over_time(redpanda_cluster_brokers[30d])) - sum(up{job='redpanda'})) > 0
+    for: 1m
+    labels:
+      severity: critical
+  - alert: Brokers are down (alternative)
+    annotations:
+      summary: The number of active brokers has been too low for more than 1 minute.
+    expr: ((max_over_time(count(redpanda_application_uptime_seconds_total)[1w:])) - (count(redpanda_application_uptime_seconds_total) or on () vector(0))) > 0
+    for: 1m
+    labels:
+      severity: critical
+  - alert: Storage is degraded
+    annotations:
+      summary: Redpanda is alerting that storage is degraded for more than 1 minute, resulting in writes being rejected.
+    expr: (redpanda_storage_disk_free_space_alert) > 1
+    for: 1m
+    labels:
+      severity: critical
+  - alert: Storage - there is less than 1 GiB of free space
+    annotations:
+      summary: There is less than 1 GiB free space available for more than 1 minute.
+    expr: (redpanda_storage_disk_free_bytes) < 1073741824
+    for: 1m
+    labels:
+      severity: critical
+  - alert: Leaderless Partitions
+    annotations:
+      summary: There are leaderless partitions for more than 1 minute, so some data may be unavailable.
+    expr: (redpanda_cluster_unavailable_partitions) > 0
+    for: 1m
+    labels:
+      severity: critical
+  - alert: Low Memory
+    annotations:
+      summary: There is less than 1 GiB memory available for more than 1 minute.
+    expr: (redpanda_memory_available_memory) < 1073741824
+    for: 1m
+    labels:
+      severity: critical
+  - alert: Storage Alert - Low Space
+    annotations:
+      summary: Redpanda is alerting that space is too low for over 5 minutes.
+    expr: (redpanda_storage_disk_free_space_alert) > 0
+    for: 5m
+    labels:
+      severity: high
+  - alert: Under-replicated partitions
+    annotations:
+      summary: There have been under-replicated partitions for over 5 minutes.
+    expr: (redpanda_kafka_under_replicated_replicas) > 0
+    for: 5m
+    labels:
+      severity: high
+  - alert: Storage space is predicted to be less than 1 GiB in 30 minutes
+    annotations:
+      summary: Storage space has been consistently predicted to be less than 1 GiB (in one hour), for over 5 minutes.
+    expr: (predict_linear(redpanda_storage_disk_free_bytes[1h], 1800)) < 1073741824
+    for: 5m
+    labels:
+      severity: high
+  - alert: Memory is predicted to be less than 1 GiB in one hour
+    annotations:
+      summary: Memory has been consistently predicted to be less than 1 GiB (in one hour), for over 5 minutes.
+    expr: (predict_linear(redpanda_memory_available_memory[30m], 1800)) < 1073741824
+    for: 5m
+    labels:
+      severity: high
+  - alert: More than 1% of Schema Registry requests results in an error
+    annotations:
+      summary: More than 1% of Schema Registry requests results in an error, for over 5 minutes.
+    expr: (100 * (sum by (instance) (rate(redpanda_schema_registry_request_errors_total[5m])) / sum by (instance) (rate(redpanda_schema_registry_request_latency_seconds_count[5m])))) > 1
+    for: 5m
+    labels:
+      severity: high
+  - alert: More than 1% of RPC requests results in an error
+    annotations:
+      summary: More than 1% of RPC requests results in an error, for over 5 minutes.
+    expr: (100 * (sum by (instance) (rate(redpanda_rpc_request_errors_total[5m])) / sum by (instance) (rate(redpanda_rpc_request_latency_seconds_count[5m])))) > 1
+    for: 5m
+    labels:
+      severity: high
+  - alert: More than 1% of REST requests results in an error
+    annotations:
+      summary: More than 1% of REST requests results in an error, for over 5 minutes.
+    expr: (100 * (sum by (instance) (rate(redpanda_rest_proxy_request_errors_total[5m])) / sum by (instance) (rate(redpanda_rest_proxy_request_latency_seconds_count[5m])))) > 1
+    for: 5m
+    labels:
+      severity: high
+  - alert: More than 1% of Raft RPC requests results in an error
+    annotations:
+      summary: More than 1% of Raft RPC requests results in an error, for over 5 minutes.
+    expr: (100 * (sum by (instance) (rate(redpanda_node_status_rpcs_timed_out[5m])) / sum by (instance) (rate(redpanda_node_status_rpcs_sent[5m])))) > 1
+    for: 5m
+    labels:
+      severity: high
+  - alert: Raft leadership is continually changing
+    annotations:
+      summary: Raft leadership is continually changing, rather than settling into a stable distribution, for over 5 minutes.
+    expr: (rate(redpanda_raft_leadership_changes[1m])) > 0
+    for: 5m
+    labels:
+      severity: high
+  - alert: Kafka request latency is too high
+    annotations:
+      summary: Kafka request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
+    expr: (histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_request_latency_seconds_bucket[5m])))) > 0.1
+    for: 5m
+    labels:
+      severity: high
+  - alert: RPC request latency is too high
+    annotations:
+      summary: RPC request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
+    expr: (histogram_quantile(0.95, sum by(le) (rate(redpanda_rpc_request_latency_seconds_bucket[5m])))) > 0.1
+    for: 5m
+    labels:
+      severity: high
+  - alert: REST request latency is too high
+    annotations:
+      summary: REST request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
+    expr: (histogram_quantile(0.95, sum by(le) (rate(redpanda_rest_proxy_request_latency_seconds_bucket[5m])))) > 0.1
+    for: 5m
+    labels:
+      severity: high
+  - alert: Schema Registry request latency is too high
+    annotations:
+      summary: Schema Registry request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
+    expr: (histogram_quantile(0.95, sum by(le) (rate(redpanda_schema_registry_request_latency_seconds_bucket[5m])))) > 0.1
+    for: 5m
+    labels:
+      severity: high
+  - alert: Storage - there is less than 10 GiB of free space
+    annotations:
+      summary: There is less than 10 GiB free space available for more than 5 minutes.
+    expr: (redpanda_storage_disk_free_bytes) < 1073741824
+    for: 5m
+    labels:
+      severity: medium
+  - alert: Schema Registry errors are increasing
+    annotations:
+      summary: Schema Registry errors are increasing for more than 5 minutes.
+    expr: (increase(redpanda_schema_registry_request_errors_total[1m])) > 0
+    for: 5m
+    labels:
+      severity: medium
+  - alert: RPC errors are increasing
+    annotations:
+      summary: RPC errors are increasing for more than 5 minutes.
+    expr: (increase(redpanda_rpc_request_errors_total[1m])) > 0
+    for: 5m
+    labels:
+      severity: medium
+  - alert: REST Proxy errors are increasing
+    annotations:
+      summary: REST Proxy errors are increasing for more than 5 minutes.
+    expr: (increase(redpanda_rest_proxy_request_errors_total[1m])) > 0
+    for: 5m
+    labels:
+      severity: medium
+  - alert: Raft RPC errors are increasing
+    annotations:
+      summary: Raft RPC errors are increasing for more than 5 minutes.
+    expr: (increase(redpanda_node_status_rpcs_timed_out[1m]) OR on() vector(0)) > 0
+    for: 5m
+    labels:
+      severity: medium

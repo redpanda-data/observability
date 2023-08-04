@@ -1,5 +1,19 @@
 version: '3.7'
 services:
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    hostname: mailhog
+    ports:
+      - 8025:8025
+  generate-alert-configs:
+    image: pmwrp/alert-generation:0.1
+    environment:
+      - "ALERT_DEFINITIONS_YAML_FILE_LOCATION=/config/alert-definitions.yml"
+      - "GRAFANA_ALERTS_YAML_FILE_LOCATION=/config/grafana/provisioning/alerting/alerts.yml"
+      - "PROMETHEUS_ALERTS_YAML_FILE_LOCATION=/config/prometheus/alert-rules.yml"
+    volumes:
+      - "./config:/config"
   redpanda0:
     # NOTE: Please use the latest version here!
     image: docker.redpanda.com/vectorized/redpanda:latest
@@ -132,9 +146,19 @@ services:
     image: prom/prometheus
     container_name: prometheus
     # Mount prometheus configuration
-    volumes: [ "./config/prometheus.yml:/etc/prometheus/prometheus.yml" ]
+    volumes: [ "./config/prometheus:/etc/prometheus" ]
     ports: 
       - "9090:9090"
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    hostname: alertmanager
+    ports:
+      - "9099:9093"
+    volumes:
+      - "./config/alertmanager:/config"
+      - alertmanager-data:/data
+    command: --config.file=/config/alertmanager.yml --log.level=info
   connect:
     image: cnfldemos/cp-server-connect-datagen:0.5.0-6.2.0
     hostname: connect
