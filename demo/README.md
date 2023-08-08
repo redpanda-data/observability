@@ -3,7 +3,10 @@ This example contains a fully dockerized sandbox with:
 * A 3-node Redpanda cluster
 * Redpanda Console
 * Prometheus
+* Alert Manager (from Prometheus)
+* [Alert Generation](../alert-generation)
 * Grafana
+* Mailhog
 * Kafka Connect. Used here to showcase the Kafka producer/consumer dashboards
 * Owl Shop. A mock e-commerce application that generates data.
 
@@ -59,6 +62,7 @@ You should now be able to open the following URIs in your browser for each servi
 - Redpanda Console: [http://localhost:8080/](http://localhost:8080/])
 - Prometheus: [http://localhost:9090](http://localhost:9090])
 - Grafana: [http://localhost:3000](http://localhost:3000])
+- Mailhog: [http://localhost:8025](http://localhost:8025)
 
 Once you log into Grafana, click on the Dashboards icon on the left and select Browse. From there, you should be able to
 see the imported dashboards described above.
