@@ -157,7 +157,6 @@ services:
       - "9099:9093"
     volumes:
       - "./config/alertmanager:/config"
-      - alertmanager-data:/data
     command: --config.file=/config/alertmanager.yml --log.level=info
   connect:
     image: cnfldemos/cp-server-connect-datagen:0.5.0-6.2.0
