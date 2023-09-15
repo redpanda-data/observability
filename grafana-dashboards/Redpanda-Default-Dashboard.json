@@ -3631,7 +3631,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(redpanda_rest_proxy_request_latency_seconds{instance=~\"$node\"}) by ($aggr_criteria)",
+              "expr": "sum(redpanda_rest_proxy_request_latency_seconds_bucket{instance=~\"$node\"}) by ($aggr_criteria)",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "node: {{instance}}",
@@ -3856,7 +3856,7 @@
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "sum(redpanda_schema_registry_request_latency_seconds{instance=~\"$node\"}) by ($aggr_criteria)",
+              "expr": "sum(redpanda_schema_registry_request_latency_seconds_bucket{instance=~\"$node\"}) by ($aggr_criteria)",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "node: {{instance}}",
