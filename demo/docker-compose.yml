@@ -42,6 +42,7 @@ services:
     - 8081:8081
     - 8082:8082
     - 9092:9092
+    - 9644:9644
     - 28082:28082
   redpanda1:
     # NOTE: Please use the latest version here!
@@ -72,6 +73,7 @@ services:
     ports:
     - 8083:8083
     - 9093:9093
+    - 9744:9644
   redpanda2:
     # NOTE: Please use the latest version here!
     image: docker.redpanda.com/vectorized/redpanda:latest
@@ -101,6 +103,7 @@ services:
     ports:
     - 8084:8084
     - 9094:9094
+    - 9844:9644
   console:
     image: docker.redpanda.com/vectorized/console:latest
     restart: on-failure
