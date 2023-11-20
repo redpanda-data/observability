@@ -4601,6 +4601,108 @@
       ],
       "title": "Leadership Transfers",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Available storage for Redpanda clusters",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0.8
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 95
+      },
+      "id": 23763572043,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "1 - redpanda_storage_disk_free_bytes{}/redpanda_storage_disk_total_bytes{}",
+          "instant": false,
+          "legendFormat": "{{ instance }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Storage Saturation",
+      "type": "timeseries"
     }
   ],
   "refresh": "5s",
