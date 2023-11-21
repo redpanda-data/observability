@@ -4694,9 +4694,9 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1 - redpanda_storage_disk_free_bytes{}/redpanda_storage_disk_total_bytes{}",
+          "expr": "1 - sum(redpanda_storage_disk_free_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])/sum(redpanda_storage_disk_total_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "instant": false,
-          "legendFormat": "{{ instance }}",
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}",
           "range": true,
           "refId": "A"
         }
