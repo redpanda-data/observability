@@ -3,7 +3,7 @@ rules:
   uid: c6f9ef08-5b6e-49b6-8b10-d55f40fbf719
   folder: Redpanda Critical
   evaluation_group: critical
-  expr: sum(max_over_time(redpanda_cluster_brokers[30d])) - sum(up{job='redpanda'})
+  expr: max(max_over_time(redpanda_cluster_brokers{job='redpanda'}[30d])) - sum(up{job='redpanda'})
   comparison: gt
   threshold: 0
   for: 1m
@@ -15,7 +15,7 @@ rules:
   uid: a32ac38d-8553-4708-a227-956720856af0
   folder: Redpanda Critical
   evaluation_group: critical
-  expr: (max_over_time(count(redpanda_application_uptime_seconds_total)[1w:])) - (count(redpanda_application_uptime_seconds_total) or on () vector(0))
+  expr: max_over_time(count(redpanda_application_uptime_seconds_total)[30d:]) - (count(redpanda_application_uptime_seconds_total) or on () vector(0))
   comparison: gt
   threshold: 0
   for: 1m
@@ -47,7 +47,7 @@ rules:
     severity: critical
   annotations:
     summary: "There is less than 1 GiB free space available for more than 1 minute."
-- alert: Leaderless Partitions
+- alert: Leaderless partitions
   uid: 64622530-7b51-4ba3-9463-d6ea9b50903a
   folder: Redpanda Critical
   evaluation_group: critical
@@ -59,7 +59,7 @@ rules:
     severity: critical
   annotations:
     summary: "There are leaderless partitions for more than 1 minute, so some data may be unavailable."
-- alert: Low Memory
+- alert: Low memory - there is less than 1 GiB of memory
   uid: a9530700-4b13-4264-9fd3-6fa042f74c6d
   folder: Redpanda Critical
   evaluation_group: critical
@@ -71,7 +71,7 @@ rules:
     severity: critical
   annotations:
     summary: "There is less than 1 GiB memory available for more than 1 minute."
-- alert: Storage Alert - Low Space
+- alert: Storage - low space
   uid: 38e89a48-249a-4709-bbcc-37698e474979
   folder: Redpanda Severe
   evaluation_group: severe
@@ -131,18 +131,30 @@ rules:
     severity: high
   annotations:
     summary: "More than 1% of Schema Registry requests results in an error, for over 5 minutes."
-- alert: More than 1% of RPC requests results in an error
+- alert: More than 1% of Kafka RPC requests results in an error
   uid: 1fa48d99-c597-4f9f-85b5-82f7bca1bd18
   folder: Redpanda Severe
   evaluation_group: severe
-  expr: 100 * (sum by (instance) (rate(redpanda_rpc_request_errors_total[5m])) / sum by (instance) (rate(redpanda_rpc_request_latency_seconds_count[5m])))
+  expr: 100 * (sum by (instance) (rate(redpanda_rpc_request_errors_total{redpanda_server="kafka"}[5m])) / sum by (instance) (rate(redpanda_rpc_request_latency_seconds_count{redpanda_server="kafka"}[5m])))
   comparison: gt
   threshold: 1
   for: 5m
   labels:
     severity: high
   annotations:
-    summary: "More than 1% of RPC requests results in an error, for over 5 minutes."
+    summary: "More than 1% of Kafka RPC requests results in an error, for over 5 minutes."
+- alert: More than 1% of internal RPC requests results in an error
+  uid: 1fa48d99-c597-4f9f-85b5-82f7bca1bd18
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: 100 * (sum by (instance) (rate(redpanda_rpc_request_errors_total{redpanda_server="internal"}[5m])) / sum by (instance) (rate(redpanda_rpc_request_latency_seconds_count{redpanda_server="internal"}[5m])))
+  comparison: gt
+  threshold: 1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "More than 1% of internal RPC requests results in an error, for over 5 minutes."
 - alert: More than 1% of REST requests results in an error
   uid: 15337901-3519-4cd8-a9a8-da2f3b05cf3f
   folder: Redpanda Severe
@@ -155,18 +167,6 @@ rules:
     severity: high
   annotations:
     summary: "More than 1% of REST requests results in an error, for over 5 minutes."
-- alert: More than 1% of Raft RPC requests results in an error
-  uid: 84b666cf-6acc-4931-a6d9-d7ef55b4df93
-  folder: Redpanda Severe
-  evaluation_group: severe
-  expr: 100 * (sum by (instance) (rate(redpanda_node_status_rpcs_timed_out[5m])) / sum by (instance) (rate(redpanda_node_status_rpcs_sent[5m])))
-  comparison: gt
-  threshold: 1
-  for: 5m
-  labels:
-    severity: high
-  annotations:
-    summary: "More than 1% of Raft RPC requests results in an error, for over 5 minutes."
 - alert: Raft leadership is continually changing
   uid: 68230e62-122f-43ad-96bc-8fd8cabf9b75
   folder: Redpanda Severe
@@ -179,31 +179,67 @@ rules:
     severity: high
   annotations:
     summary: "Raft leadership is continually changing, rather than settling into a stable distribution, for over 5 minutes."
-- alert: Kafka request latency is too high
+- alert: Kafka produce latency (p95) is too high (new handler metric)
+  uid: 9569032d-93c1-4724-bf99-8d5a707823ad
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_handler_latency_seconds_bucket{handler="produce"}[5m])))
+  comparison: gt
+  threshold: 0.1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Kafka produce latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: Kafka consume latency (p95) is too high (new handler metric)
+  uid: bcc70d16-a944-4347-86ca-1e5dfe33ad4d
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_handler_latency_seconds_bucket{handler="fetch"}[5m])))
+  comparison: gt
+  threshold: 0.1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Kafka consume latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: Kafka produce latency (p95) is too high
+  uid: 5e98342f-cd16-4dc6-96b5-dcc4c1831c21
+  folder: Redpanda Severe
+  evaluation_group: severe
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request="produce"}[5m])))
+  comparison: gt
+  threshold: 0.1
+  for: 5m
+  labels:
+    severity: high
+  annotations:
+    summary: "Kafka produce latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: Kafka consume latency (p95) is too high
   uid: 0ffa0b3a-5b6d-4247-aa0a-e3d012dbea9c
   folder: Redpanda Severe
   evaluation_group: severe
-  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_request_latency_seconds_bucket[5m])))
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request="consume"}[5m])))
   comparison: gt
   threshold: 0.1
   for: 5m
   labels:
     severity: high
   annotations:
-    summary: "Kafka request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
-- alert: RPC request latency is too high
+    summary: "Kafka consume latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: Internal RPC request latency (p95) is too high
   uid: 66d78acb-1a09-49e2-8fcb-080f6180af28
   folder: Redpanda Severe
   evaluation_group: severe
-  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_rpc_request_latency_seconds_bucket[5m])))
+  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_rpc_request_latency_seconds_bucket{redpanda_server="internal"}[5m])))
   comparison: gt
   threshold: 0.1
   for: 5m
   labels:
     severity: high
   annotations:
-    summary: "RPC request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
-- alert: REST request latency is too high
+    summary: "Internal RPC request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+- alert: REST request latency (p95) is too high
   uid: 4eb69c6f-15c7-47b2-a15b-caf12b43dd24
   folder: Redpanda Severe
   evaluation_group: severe
@@ -215,7 +251,7 @@ rules:
     severity: high
   annotations:
     summary: "REST request latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
-- alert: Schema Registry request latency is too high
+- alert: Schema Registry request latency (p95) is too high
   uid: 26861082-1112-4a0f-9929-a0cac66e568b
   folder: Redpanda Severe
   evaluation_group: severe
@@ -251,39 +287,63 @@ rules:
     severity: medium
   annotations:
     summary: "Schema Registry errors are increasing for more than 5 minutes."
-- alert: RPC errors are increasing
+- alert: Kafka RPC errors are increasing
   uid: 8b788eff-bef7-42e1-8474-1f4704a06bb7
   folder: Redpanda Moderate
   evaluation_group: moderate
-  expr: increase(redpanda_rpc_request_errors_total[1m])
+  expr: increase(redpanda_rpc_request_errors_total{redpanda_server="kafka"}[1m])
   comparison: gt
   threshold: 0
   for: 5m
   labels:
     severity: medium
   annotations:
-    summary: "RPC errors are increasing for more than 5 minutes."
-- alert: REST Proxy errors are increasing
+    summary: "Kafka RPC errors are increasing for more than 5 minutes."
+- alert: Internal RPC errors are increasing
+  uid: c6fea529-b424-474b-b370-9b44fb67e5e2
+  folder: Redpanda Moderate
+  evaluation_group: moderate
+  expr: increase(redpanda_rpc_request_errors_total{redpanda_server="internal"}[1m])
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: medium
+  annotations:
+    summary: "Internal RPC errors are increasing for more than 5 minutes."
+- alert: REST Proxy 3xx errors are increasing
   uid: 067b4155-d360-4333-9557-c2c0b5fbed9a
   folder: Redpanda Moderate
   evaluation_group: moderate
-  expr: increase(redpanda_rest_proxy_request_errors_total[1m])
+  expr: increase(redpanda_rest_proxy_request_errors_total{redpanda_status="3xx"}[1m])
   comparison: gt
   threshold: 0
   for: 5m
   labels:
     severity: medium
   annotations:
-    summary: "REST Proxy errors are increasing for more than 5 minutes."
-- alert: Raft RPC errors are increasing
-  uid: eaee0ebc-ecfb-4ff2-8be5-25081d83d436
+    summary: "REST Proxy 3xx errors are increasing for more than 5 minutes."
+- alert: REST Proxy 4xx errors are increasing
+  uid: 30277d3f-f223-4220-a95b-847fe2378e49
   folder: Redpanda Moderate
   evaluation_group: moderate
-  expr: increase(redpanda_node_status_rpcs_timed_out[1m]) OR on() vector(0)
+  expr: increase(redpanda_rest_proxy_request_errors_total{redpanda_status="4xx"}[1m])
   comparison: gt
   threshold: 0
   for: 5m
   labels:
     severity: medium
   annotations:
-    summary: "Raft RPC errors are increasing for more than 5 minutes."
+    summary: "REST Proxy 4xx errors are increasing for more than 5 minutes."
+- alert: REST Proxy 5xx errors are increasing
+  uid: b7cfb1a4-ee6c-4562-ba44-074c535f5ef6
+  folder: Redpanda Moderate
+  evaluation_group: moderate
+  expr: increase(redpanda_rest_proxy_request_errors_total{redpanda_status="5xx"}[1m])
+  comparison: gt
+  threshold: 0
+  for: 5m
+  labels:
+    severity: medium
+  annotations:
+    summary: "REST Proxy 5xx errors are increasing for more than 5 minutes."
