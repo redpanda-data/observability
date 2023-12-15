@@ -1040,81 +1040,6 @@
         "x": 4,
         "y": 11
       },
-      "id": 23763572023,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "sum(redpanda_memory_allocated_memory) / (sum(redpanda_memory_free_memory) + sum(redpanda_memory_allocated_memory))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
-          "range": true,
-          "refId": "A",
-          "step": 10
-        }
-      ],
-      "title": "Allocated memory",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 1,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 0.75
-              },
-              {
-                "color": "red",
-                "value": 0.9
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 8,
-        "y": 11
-      },
       "id": 23763572036,
       "options": {
         "orientation": "auto",
@@ -1236,7 +1161,7 @@
       "gridPos": {
         "h": 8,
         "w": 4,
-        "x": 12,
+        "x": 8,
         "y": 11
       },
       "hiddenSeries": false,
@@ -1475,8 +1400,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 16,
+        "w": 12,
+        "x": 12,
         "y": 11
       },
       "id": 154,
@@ -2591,82 +2516,6 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Total allocated memory",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 1,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 0.75
-              },
-              {
-                "color": "red",
-                "value": 0.9
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 39
-      },
-      "id": 23763572040,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.6",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": true,
-          "expr": "max by (exported_instance, instance) (redpanda_memory_allocated_memory{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} / (redpanda_memory_free_memory{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} + redpanda_memory_allocated_memory{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "{{instance}}",
-          "range": true,
-          "refId": "A",
-          "step": 10
-        }
-      ],
-      "title": "Allocated memory",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
       "description": "Free memory plus the memory occupied by the batch cache. This is how much memory Redpanda can allocate if needed after reclaim.",
       "fieldConfig": {
         "defaults": {
@@ -2703,8 +2552,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 8,
+        "w": 12,
+        "x": 0,
         "y": 39
       },
       "id": 23763572041,
@@ -2783,8 +2632,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 16,
+        "w": 12,
+        "x": 12,
         "y": 39
       },
       "id": 23763572042,
