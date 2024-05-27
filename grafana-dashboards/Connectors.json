@@ -25,7 +25,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 6,
+  "id": 14,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -54,6 +54,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -68,6 +69,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -104,7 +106,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 24,
         "x": 0,
         "y": 1
       },
@@ -199,21 +201,7 @@
         }
       ],
       "title": "Connector tasks for [[connector]]",
-      "transformations": [],
       "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 9
-      },
-      "id": 40,
-      "panels": [],
-      "title": "Latency",
-      "type": "row"
     },
     {
       "datasource": {
@@ -227,6 +215,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -240,6 +229,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -275,9 +265,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 6,
         "x": 0,
-        "y": 10
+        "y": 33
       },
       "id": 15,
       "options": {
@@ -307,7 +297,114 @@
         }
       ],
       "title": "Sink connector lag",
-      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "description": "Sink connector lag rate. Should be negative from time to time, otherwise the sink connector is not making progress.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 25
+      },
+      "id": 47,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(connector, redpanda_topic)(max by(redpanda_topic, redpanda_partition)(rate(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\"}[5m])) - on(redpanda_topic, redpanda_partition) group_right max by(connector, redpanda_topic, redpanda_partition)(label_replace(rate(redpanda_kafka_consumer_group_committed_offset{redpanda_group=~\"connect-[[connector]]\"}[5m]),\"connector\", \"$1\", \"redpanda_group\", \"connect-(.*)\")))",
+          "hide": false,
+          "legendFormat": "{{connector}} {{redpanda_topic}}",
+          "range": true,
+          "refId": "PerConnector"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(connector, redpanda_topic, redpanda_partition)(max by(redpanda_topic, redpanda_partition)(rate(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\"}[5m])) - on(redpanda_topic, redpanda_partition) group_right max by(connector, redpanda_topic, redpanda_partition)(label_replace(rate(redpanda_kafka_consumer_group_committed_offset{redpanda_group=~\"connect-[[connector]]\"}[5m]),\"connector\", \"$1\", \"redpanda_group\", \"connect-(.*)\")))",
+          "hide": true,
+          "legendFormat": "{{connector}} {{redpanda_topic}} {{redpanda_partition}}",
+          "range": true,
+          "refId": "PerPartition"
+        }
+      ],
+      "title": "Sink connector lag rate",
       "type": "timeseries"
     },
     {
@@ -322,6 +419,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -335,6 +433,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -373,7 +472,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 10
+        "y": 33
       },
       "id": 25,
       "options": {
@@ -403,7 +502,6 @@
         }
       ],
       "title": "MM2 replication latency",
-      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -418,6 +516,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -431,6 +530,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -469,7 +569,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 10
+        "y": 33
       },
       "id": 38,
       "options": {
@@ -499,8 +599,20 @@
         }
       ],
       "title": "Count of the records sent to target (by topic)",
-      "transformations": [],
       "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "id": 40,
+      "panels": [],
+      "title": "Latency",
+      "type": "row"
     },
     {
       "datasource": {
@@ -514,6 +626,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -527,6 +640,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -564,7 +678,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 42
       },
       "id": 16,
       "options": {
@@ -594,7 +708,6 @@
         }
       ],
       "title": "Redpanda consumer latency",
-      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -609,6 +722,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -622,6 +736,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -659,7 +774,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 18
+        "y": 42
       },
       "id": 17,
       "options": {
@@ -689,7 +804,6 @@
         }
       ],
       "title": "Redpanda producer latency",
-      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -698,7 +812,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 50
       },
       "id": 44,
       "panels": [],
@@ -716,6 +830,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -729,6 +844,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -767,7 +883,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 27
+        "y": 51
       },
       "id": 20,
       "options": {
@@ -797,7 +913,6 @@
         }
       ],
       "title": "Bytes in",
-      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -811,6 +926,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -824,6 +940,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -862,7 +979,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 27
+        "y": 51
       },
       "id": 23,
       "options": {
@@ -892,7 +1009,6 @@
         }
       ],
       "title": "Bytes out",
-      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -901,7 +1017,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 59
       },
       "id": 46,
       "panels": [],
@@ -919,6 +1035,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -932,6 +1049,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -969,7 +1087,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 60
       },
       "id": 18,
       "options": {
@@ -1023,7 +1141,6 @@
         }
       ],
       "title": "Record error rate",
-      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -1037,6 +1154,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -1050,6 +1168,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1087,7 +1206,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 36
+        "y": 60
       },
       "id": 24,
       "options": {
@@ -1129,7 +1248,6 @@
         }
       ],
       "title": "Producer record rate",
-      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -1144,6 +1262,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -1157,6 +1276,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1194,7 +1314,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 36
+        "y": 60
       },
       "id": 19,
       "options": {
@@ -1224,14 +1344,12 @@
         }
       ],
       "title": "Producer record error rate",
-      "transformations": [],
       "type": "timeseries"
     }
   ],
   "refresh": "30s",
   "revision": 1,
-  "schemaVersion": 38,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [
     "connectors"
   ],
@@ -1324,6 +1442,7 @@
     "from": "now-3h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
   "title": "Connectors",
