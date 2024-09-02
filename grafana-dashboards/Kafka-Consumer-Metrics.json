@@ -22,7 +22,7 @@
       }
     ]
   },
-  "description": "Kafka Consumer Java client metrics for Redpanda",
+  "description": "Kafka Consumer Java client metrics",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -2083,6 +2083,24 @@
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "prometheus",
+          "value": "prometheus"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data Source",
+        "multi": false,
+        "name": "DS_PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
       }
     ]
   },
@@ -2105,8 +2123,8 @@
     ]
   },
   "timezone": "",
-  "title": "Kafka Consumer",
+  "title": "Kafka Java Consumer",
   "uid": "-C-IEldWk2",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }

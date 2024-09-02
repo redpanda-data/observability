@@ -22,7 +22,7 @@
       }
     ]
   },
-  "description": "Kafka Consumer Java client metrics for Redpanda",
+  "description": "Kafka Producer Java client metrics",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "gnetId": 18133,
@@ -1968,7 +1968,7 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -1986,7 +1986,7 @@
     ]
   },
   "timezone": "",
-  "title": "Kafka Producer",
+  "title": "Kafka Java Producer",
   "uid": "asd3tgdf",
   "version": 1,
   "weekStart": ""
