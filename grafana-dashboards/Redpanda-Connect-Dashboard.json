@@ -596,7 +596,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(batch_created[5m]))*300",
+          "expr": "sum(rate(batch_created[5m]))*60",
           "instant": false,
           "interval": "",
           "legendFormat": "__auto",
@@ -692,7 +692,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(output_sent[5m])*300",
+          "expr": "rate(output_sent[5m])*60",
           "instant": false,
           "legendFormat": "{{path}}",
           "range": true,
@@ -976,7 +976,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(processor_batch_received[5m])*300",
+          "expr": "rate(processor_batch_received[5m])*60",
           "instant": false,
           "legendFormat": "{{path}}",
           "range": true,
@@ -1071,7 +1071,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(processor_batch_sent[5m])*300",
+          "expr": "rate(processor_batch_sent[5m])*60",
           "instant": false,
           "legendFormat": "{{path}}",
           "range": true,
@@ -1355,7 +1355,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(processor_received[5m])*300",
+          "expr": "rate(processor_received[5m])*60",
           "instant": false,
           "legendFormat": "{{path}}",
           "range": true,
@@ -1450,7 +1450,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "rate(processor_sent[5m])*300",
+          "expr": "rate(processor_sent[5m])*60",
           "instant": false,
           "legendFormat": "{{path}}",
           "range": true,
