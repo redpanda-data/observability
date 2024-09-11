@@ -783,7 +783,7 @@
           "step": 10
         }
       ],
-      "title": "Partition Balance",
+      "title": "Partition Offset Balance Deviation",
       "type": "stat"
     },
     {
