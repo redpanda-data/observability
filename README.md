@@ -31,6 +31,11 @@ consumers, using the [Prometheus JMX Exporter](https://github.com/prometheus/jmx
 ![](docs/images/Ops%20Dashboard.png)
 ![](docs/images/Consumer%20Offsets.png)
 ![](docs/images/Topic%20Metrics.png)
+![](docs/images/Kafka%20Consume1.png)
+![](docs/images/Kafka%20Consume2.png)
+![](docs/images/Kafka%20Produce1.png)
+![](docs/images/Kafka%20Produce2.png)
+![](docs/images/Kafka%20Produce3.png)
 
 # Alerting
 This repository contains examples for configuring alerting using [Prometheus](https://prometheus.io/) (via [Alert Manager](https://prometheus.io/docs/alerting/latest/alertmanager/)) or [Grafana](https://grafana.com/).
