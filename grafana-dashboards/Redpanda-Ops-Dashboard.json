@@ -1061,7 +1061,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "avg(rate(redpanda_cpu_busy_seconds_total[$__rate_interval]))",
+          "expr": "avg(deriv(redpanda_cpu_busy_seconds_total[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -4222,7 +4222,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "avg by([[aggr_criteria]]) (rate(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\", redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval]))",
+          "expr": "avg by([[aggr_criteria]]) (deriv(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\", redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -4237,7 +4237,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "avg by([[aggr_criteria]]) (rate(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\", redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval] offset 1d))",
+          "expr": "avg by([[aggr_criteria]]) (deriv(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\", redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval] offset 1d))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
