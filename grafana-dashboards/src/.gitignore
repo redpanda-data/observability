@@ -1,0 +1,5 @@
+# Vendored dependencies
+vendor/
+
+# Lock file
+jsonnetfile.lock.json
