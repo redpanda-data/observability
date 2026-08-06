@@ -63,7 +63,7 @@
       },
       "id": 999,
       "panels": [],
-      "title": "Version 1.1 | Generated: 2026-08-06 04:34:59 UTC",
+      "title": "Version 1.1 | Generated: 2026-08-06 05:22:50 UTC",
       "type": "row"
     },
     {
@@ -3794,7 +3794,7 @@
         "label": "Instance Label",
         "multi": false,
         "name": "instance_label",
-        "query": "query_result(vectorized_application_uptime or label_replace(vector(0), \"instance\", \"fallback\", \"\", \"\"))",
+        "query": "query_result(vectorized_application_uptime or on() label_replace(vector(0), \"instance\", \"fallback\", \"\", \"\"))",
         "refresh": 2,
         "regex": "/\\b(instance|pod)=\"/",
         "skipUrlSync": false,
