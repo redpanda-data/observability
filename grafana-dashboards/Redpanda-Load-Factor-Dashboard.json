@@ -63,7 +63,7 @@
       },
       "id": 999,
       "panels": [],
-      "title": "Version 1.1 | Generated: 2026-08-06 03:50:44 UTC",
+      "title": "Version 1.1 | Generated: 2026-08-06 04:17:15 UTC",
       "type": "row"
     },
     {
@@ -1720,7 +1720,7 @@
                     "1": {
                       "color": "red",
                       "index": 1,
-                      "text": "These metrics will be uniformly zero since this system isn't using IO properties"
+                      "text": "These metrics will be uniformly zero since this system isn't using IO properties or host metrics are missing"
                     }
                   },
                   "type": "value"
