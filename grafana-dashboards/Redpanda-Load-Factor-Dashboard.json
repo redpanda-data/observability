@@ -1,7 +1,7 @@
 {
   "__inputs": [
     {
-      "description": "Prometheus datasource for Redpanda metrics (/metrics and /public_metrics combined)",
+      "description": "Prometheus datasource scraping the Redpanda /public_metrics endpoint",
       "label": "Redpanda prometheus",
       "name": "DS_PROMETHEUS",
       "pluginId": "prometheus",
@@ -30,7 +30,7 @@
     }
   ],
   "annotations": {},
-  "description": "Resource utilization dashboard for Redpanda showing CPU, memory, and disk I/O metrics, using the public (redpanda_*) metrics from /public_metrics",
+  "description": "Resource utilization relative to capacity (load factor) for Redpanda, covering CPU (reactor), IO scheduler, disk IOPS, memory, network bandwidth, and client connections, using the public (redpanda_*) metrics from /public_metrics",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -45,7 +45,7 @@
       },
       "id": 999,
       "panels": [],
-      "title": "Version 1.1 | Generated: 2026-08-06 03:28:19 UTC",
+      "title": "Version 1.1 | Generated: 2026-08-06 03:36:04 UTC",
       "type": "row"
     },
     {
@@ -56,7 +56,7 @@
         "x": 0,
         "y": 1
       },
-      "id": 0,
+      "id": 2,
       "panels": [
         {
           "datasource": {
@@ -217,6 +217,7 @@
             "x": 0,
             "y": 1
           },
+          "id": 1,
           "options": null,
           "repeatDirection": "h",
           "targets": [
@@ -276,7 +277,7 @@
         "x": 0,
         "y": 8
       },
-      "id": 0,
+      "id": 4,
       "panels": [
         {
           "datasource": {
@@ -353,6 +354,7 @@
             "x": 0,
             "y": 8
           },
+          "id": 3,
           "options": null,
           "repeatDirection": "h",
           "targets": [
@@ -434,7 +436,7 @@
         "x": 0,
         "y": 15
       },
-      "id": 0,
+      "id": 6,
       "panels": [
         {
           "datasource": {
@@ -733,6 +735,7 @@
             "x": 0,
             "y": 15
           },
+          "id": 5,
           "options": null,
           "repeatDirection": "h",
           "targets": [
@@ -844,7 +847,7 @@
         "x": 0,
         "y": 22
       },
-      "id": 0,
+      "id": 8,
       "panels": [],
       "title": "Load Factor",
       "type": "row"
@@ -888,6 +891,7 @@
         "x": 0,
         "y": 23
       },
+      "id": 7,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
@@ -1417,7 +1421,7 @@
         "x": 0,
         "y": 33
       },
-      "id": 0,
+      "id": 13,
       "panels": [
         {
           "datasource": {
@@ -1456,6 +1460,7 @@
             "x": 0,
             "y": 33
           },
+          "id": 9,
           "options": {
             "orientation": "auto",
             "reduceOptions": {
@@ -1519,6 +1524,7 @@
             "x": 0,
             "y": 41
           },
+          "id": 10,
           "options": {
             "cellHeight": "sm",
             "footer": {
@@ -1591,6 +1597,7 @@
             "x": 0,
             "y": 49
           },
+          "id": 11,
           "options": {
             "legend": {
               "calcs": [],
@@ -1636,6 +1643,7 @@
             "x": 8,
             "y": 49
           },
+          "id": 12,
           "options": {
             "legend": {
               "calcs": [],
@@ -1673,7 +1681,7 @@
         "x": 0,
         "y": 58
       },
-      "id": 0,
+      "id": 21,
       "panels": [
         {
           "datasource": {
@@ -1709,6 +1717,7 @@
             "x": 0,
             "y": 58
           },
+          "id": 14,
           "options": {
             "colorMode": "background_solid",
             "graphMode": "none",
@@ -1773,6 +1782,7 @@
             "x": 0,
             "y": 59
           },
+          "id": 15,
           "options": {
             "orientation": "auto",
             "reduceOptions": {
@@ -1836,6 +1846,7 @@
             "x": 0,
             "y": 67
           },
+          "id": 16,
           "options": {
             "cellHeight": "sm",
             "footer": {
@@ -1910,6 +1921,7 @@
             "x": 0,
             "y": 75
           },
+          "id": 17,
           "options": {
             "legend": {
               "calcs": [],
@@ -1953,6 +1965,7 @@
             "x": 8,
             "y": 75
           },
+          "id": 18,
           "options": {
             "legend": {
               "calcs": [],
@@ -1996,6 +2009,7 @@
             "x": 16,
             "y": 75
           },
+          "id": 19,
           "options": {
             "legend": {
               "calcs": [],
@@ -2039,6 +2053,7 @@
             "x": 0,
             "y": 83
           },
+          "id": 20,
           "options": {
             "legend": {
               "calcs": [],
@@ -2076,7 +2091,7 @@
         "x": 0,
         "y": 92
       },
-      "id": 0,
+      "id": 28,
       "panels": [
         {
           "datasource": {
@@ -2119,6 +2134,7 @@
             "x": 0,
             "y": 92
           },
+          "id": 22,
           "options": {
             "legend": {
               "calcs": [],
@@ -2167,6 +2183,7 @@
             "x": 8,
             "y": 92
           },
+          "id": 23,
           "options": {
             "legend": {
               "calcs": [],
@@ -2210,6 +2227,7 @@
             "x": 16,
             "y": 92
           },
+          "id": 24,
           "options": {
             "legend": {
               "calcs": [],
@@ -2253,6 +2271,7 @@
             "x": 0,
             "y": 100
           },
+          "id": 25,
           "options": {
             "legend": {
               "calcs": [],
@@ -2296,6 +2315,7 @@
             "x": 8,
             "y": 100
           },
+          "id": 26,
           "options": {
             "legend": {
               "calcs": [],
@@ -2339,6 +2359,7 @@
             "x": 16,
             "y": 100
           },
+          "id": 27,
           "options": {
             "legend": {
               "calcs": [],
@@ -2376,7 +2397,7 @@
         "x": 0,
         "y": 109
       },
-      "id": 0,
+      "id": 35,
       "panels": [
         {
           "datasource": {
@@ -2419,6 +2440,7 @@
             "x": 0,
             "y": 109
           },
+          "id": 29,
           "options": {
             "legend": {
               "calcs": [],
@@ -2467,6 +2489,7 @@
             "x": 8,
             "y": 109
           },
+          "id": 30,
           "options": {
             "legend": {
               "calcs": [],
@@ -2510,6 +2533,7 @@
             "x": 16,
             "y": 109
           },
+          "id": 31,
           "options": {
             "legend": {
               "calcs": [],
@@ -2553,6 +2577,7 @@
             "x": 0,
             "y": 117
           },
+          "id": 32,
           "options": {
             "legend": {
               "calcs": [],
@@ -2596,6 +2621,7 @@
             "x": 8,
             "y": 117
           },
+          "id": 33,
           "options": {
             "legend": {
               "calcs": [],
@@ -2639,6 +2665,7 @@
             "x": 16,
             "y": 117
           },
+          "id": 34,
           "options": {
             "legend": {
               "calcs": [],
@@ -2676,7 +2703,7 @@
         "x": 0,
         "y": 126
       },
-      "id": 0,
+      "id": 40,
       "panels": [
         {
           "datasource": {
@@ -2715,6 +2742,7 @@
             "x": 0,
             "y": 126
           },
+          "id": 36,
           "options": {
             "orientation": "auto",
             "reduceOptions": {
@@ -2802,6 +2830,7 @@
             "x": 0,
             "y": 134
           },
+          "id": 37,
           "options": {
             "cellHeight": "sm",
             "footer": {
@@ -2920,6 +2949,7 @@
             "x": 0,
             "y": 142
           },
+          "id": 38,
           "options": {
             "legend": {
               "calcs": [],
@@ -2992,6 +3022,7 @@
             "x": 8,
             "y": 142
           },
+          "id": 39,
           "options": {
             "legend": {
               "calcs": [],
@@ -3034,7 +3065,7 @@
         "x": 0,
         "y": 151
       },
-      "id": 0,
+      "id": 43,
       "panels": [
         {
           "datasource": {
@@ -3073,6 +3104,7 @@
             "x": 0,
             "y": 151
           },
+          "id": 41,
           "options": {
             "orientation": "auto",
             "reduceOptions": {
@@ -3281,6 +3313,7 @@
             "x": 0,
             "y": 167
           },
+          "id": 42,
           "options": {
             "legend": {
               "calcs": [],
