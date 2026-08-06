@@ -23,6 +23,24 @@
       "version": "1.0.0"
     },
     {
+      "id": "gauge",
+      "name": "Gauge",
+      "type": "panel",
+      "version": ""
+    },
+    {
+      "id": "stat",
+      "name": "Stat",
+      "type": "panel",
+      "version": ""
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "type": "panel",
+      "version": ""
+    },
+    {
       "id": "timeseries",
       "name": "Time series",
       "type": "panel",
@@ -45,7 +63,7 @@
       },
       "id": 999,
       "panels": [],
-      "title": "Version 1.1 | Generated: 2026-08-06 03:36:04 UTC",
+      "title": "Version 1.1 | Generated: 2026-08-06 03:50:44 UTC",
       "type": "row"
     },
     {
