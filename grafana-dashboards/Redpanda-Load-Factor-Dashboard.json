@@ -1,7 +1,7 @@
 {
   "__inputs": [
     {
-      "description": "Prometheus datasource for Redpanda metrics (/metrics and /public_metrics combined)",
+      "description": "Prometheus datasource scraping the Redpanda /public_metrics endpoint",
       "label": "Redpanda prometheus",
       "name": "DS_PROMETHEUS",
       "pluginId": "prometheus",
@@ -30,7 +30,7 @@
     }
   ],
   "annotations": {},
-  "description": "Resource utilization dashboard for Redpanda showing CPU, memory, and disk I/O metrics, using the public (redpanda_*) metrics from /public_metrics",
+  "description": "Resource utilization relative to capacity (load factor) for Redpanda, covering CPU (reactor), IO scheduler, disk IOPS, memory, network bandwidth, and client connections, using the public (redpanda_*) metrics from /public_metrics",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -45,7 +45,7 @@
       },
       "id": 999,
       "panels": [],
-      "title": "Version 1.1 | Generated: 2026-08-06 03:28:19 UTC",
+      "title": "Version 1.1 | Generated: 2026-08-06 03:28:20 UTC",
       "type": "row"
     },
     {
