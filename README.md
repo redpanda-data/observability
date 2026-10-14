@@ -5,7 +5,7 @@ This repository contains examples for configuring monitoring of Redpanda using P
 > This version is designed to work with the `public_metrics` endpoint that was introduced in Redpanda 22.2 and is provided by Redpanda Cloud. If you are running an older version of Redpanda please use the [legacy version](../../tree/legacy_metrics) of these dashboards.
 
 > [!IMPORTANT]
-> The latest version of the [Redpanda Ops Dashboard](grafana-dashboards/Redpanda-Ops-Dashboard.json) includes the newer Kafka handler latency metric, specifically `redpanda_kafka_handler_latency_seconds_bucket{handler="produce"}` and `redpanda_kafka_handler_latency_seconds_bucket{handler="fetch"}`. This metric is only available from Redpanda versions `23.1.19+` and `23.2.12+`.
+> The latest version of the [Redpanda Ops Dashboard](grafana-dashboards/Redpanda-Ops-Dashboard.json) uses the Kafka handler latency metric for produce, `redpanda_kafka_handler_latency_seconds_bucket{handler="produce"}`, which is only available from Redpanda versions `23.1.19+` and `23.2.12+`. Fetch latency panels use `redpanda_kafka_request_latency_seconds_bucket{redpanda_request="consume"}` instead: the fetch handler metric includes the time a long-polling consumer waits for `fetch.max.wait.ms`, so idle consumers report close to their maximum wait and dominate p95 and p99 on clusters with little fetch traffic.
 
 ## Grafana Dashboards
 The [grafana-dashboards](grafana-dashboards) folder contains sample dashboards that can be imported directly into a 
