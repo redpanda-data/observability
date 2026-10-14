@@ -15,3 +15,13 @@ scrape_configs:
     username: prometheus
     password: <<password>>
   scheme: https
+  # Optional: drop series for topics or consumer groups you don't want to store.
+  # Regexes are anchored. This reduces stored series, not what the endpoint returns,
+  # and it can't filter fetch latency: neither fetch latency metric has a topic label.
+  # metric_relabel_configs:
+  #   - source_labels: [redpanda_topic]
+  #     regex: '__redpanda\..*|noisy-topic-.*'
+  #     action: drop
+  #   - source_labels: [redpanda_group]
+  #     regex: 'connect-.*|tmp-.*'
+  #     action: drop
