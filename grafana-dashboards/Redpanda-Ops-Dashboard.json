@@ -2132,7 +2132,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request=\"consume\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2147,7 +2147,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request=\"consume\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -2161,7 +2161,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.95 , sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.95 , sum(rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request=\"consume\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2177,7 +2177,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request=\"consume\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -3061,7 +3061,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request=\"consume\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -3075,7 +3075,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request=\"consume\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -3189,7 +3189,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"$node\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request=\"consume\",instance=~\"$node\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -3203,7 +3203,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"$node\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request=\"consume\",instance=~\"$node\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,

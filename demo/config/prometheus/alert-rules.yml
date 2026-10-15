@@ -113,13 +113,6 @@ groups:
     for: 5m
     labels:
       severity: high
-  - alert: Kafka consume latency (p95) is too high (new handler metric)
-    annotations:
-      summary: Kafka consume latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
-    expr: (histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_handler_latency_seconds_bucket{handler="fetch"}[5m])))) > 0.1
-    for: 5m
-    labels:
-      severity: high
   - alert: Kafka produce latency (p95) is too high
     annotations:
       summary: Kafka produce latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes.
