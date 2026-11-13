@@ -191,18 +191,6 @@ rules:
     severity: high
   annotations:
     summary: "Kafka produce latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
-- alert: Kafka consume latency (p95) is too high (new handler metric)
-  uid: bcc70d16-a944-4347-86ca-1e5dfe33ad4d
-  folder: Redpanda Severe
-  evaluation_group: severe
-  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_handler_latency_seconds_bucket{handler="fetch"}[5m])))
-  comparison: gt
-  threshold: 0.1
-  for: 5m
-  labels:
-    severity: high
-  annotations:
-    summary: "Kafka consume latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
 - alert: Kafka produce latency (p95) is too high
   uid: 5e98342f-cd16-4dc6-96b5-dcc4c1831c21
   folder: Redpanda Severe
@@ -219,14 +207,14 @@ rules:
   uid: 0ffa0b3a-5b6d-4247-aa0a-e3d012dbea9c
   folder: Redpanda Severe
   evaluation_group: severe
-  expr: histogram_quantile(0.95, sum by(le) (rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request="consume"}[5m])))
+  expr: histogram_quantile(0.95, sum by(le, job) (rate(redpanda_kafka_request_latency_seconds_bucket{redpanda_request="consume"}[5m])))
   comparison: gt
   threshold: 0.1
   for: 5m
   labels:
     severity: high
   annotations:
-    summary: "Kafka consume latency (95th percentile) is more than 100 milliseconds per request, for over 5 minutes."
+    summary: "Kafka consume read latency (95th percentile, per scrape job) is more than 100 milliseconds per shard read, for over 5 minutes. Excludes the fetch long-poll wait."
 - alert: Internal RPC request latency (p95) is too high
   uid: 66d78acb-1a09-49e2-8fcb-080f6180af28
   folder: Redpanda Severe
