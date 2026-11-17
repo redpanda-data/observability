@@ -451,7 +451,7 @@
           "values": false
         },
         "text": {},
-        "textMode": "auto"
+        "textMode": "value_and_name"
       },
       "pluginVersion": "9.3.6",
       "targets": [
@@ -460,18 +460,48 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by([[aggr_criteria]])(rate(redpanda_kafka_request_bytes_total[1m]))",
+          "expr": "sum(rate(redpanda_rpc_received_bytes{redpanda_server=\"kafka\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m]))",
+          "format": "time_series",
           "interval": "",
-          "legendFormat": "Partition count",
-          "range": true,
-          "refId": "A"
+          "intervalFactor": 2,
+          "legendFormat": "Client ingress",
+          "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m]))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Shadow link ingress",
+          "refId": "B",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_rpc_sent_bytes{redpanda_server=\"kafka\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m]))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Client egress",
+          "refId": "C",
+          "step": 10
         }
       ],
-      "title": "Throughput",
+      "title": "Network Throughput",
       "transparent": true,
-      "type": "stat"
+      "type": "stat",
+      "description": "Bytes per second on the network, summed across the selected brokers.\n\n- Client ingress / egress: all traffic on the Kafka API listeners (redpanda_rpc_received_bytes / redpanda_rpc_sent_bytes with redpanda_server=\"kafka\"). Includes produce and fetch payloads plus metadata, offset commits, and other protocol traffic.\n- Shadow link ingress: data this cluster fetches from the source cluster of a shadow link (redpanda_shadow_link_total_bytes_fetched). The shadow link is a client of the source cluster, so this traffic does not appear in client ingress. Shown only on clusters that are the target of a shadow link.\n\nOn a shadow link source cluster, client egress includes the data that shadow links fetch."
     },
     {
       "datasource": {
@@ -1904,7 +1934,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -1960,8 +1990,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "percentage": false,
@@ -1981,18 +2011,32 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_kafka_request_bytes_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_request=\"produce\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_rpc_received_bytes{redpanda_server=\"kafka\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "legendFormat": "Clients · Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
           "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]], shadow_link_name)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Shadow link {{shadow_link_name}} · Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "B",
           "step": 10
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Bytes Received via Kafka RPC",
+      "title": "Network Ingress: Kafka API + Shadow Link",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -2023,7 +2067,8 @@
       ],
       "yaxis": {
         "align": false
-      }
+      },
+      "description": "Bytes received over the network, stacked.\n\n- Clients: all traffic received on the Kafka API listeners (redpanda_rpc_received_bytes, redpanda_server=\"kafka\"), including produce payloads and protocol overhead.\n- Shadow link: data fetched from the source cluster of each shadow link (redpanda_shadow_link_total_bytes_fetched). This cluster is the client on those connections, so they are not counted under Clients. Shown only on shadow link target clusters.\n\nBroker-to-broker replication traffic is shown separately in the Internal RPC throughput panels."
     },
     {
       "datasource": {
@@ -2385,7 +2430,7 @@
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "binBps"
         },
         "overrides": []
       },
@@ -2441,7 +2486,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_kafka_request_bytes_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_request=\"consume\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[30s])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_rpc_sent_bytes{redpanda_server=\"kafka\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2452,7 +2497,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Bytes Sent via Kafka RPC",
+      "title": "Network Egress: Kafka API",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -2483,7 +2528,8 @@
       ],
       "yaxis": {
         "align": false
-      }
+      },
+      "description": "Bytes sent on the Kafka API listeners (redpanda_rpc_sent_bytes, redpanda_server=\"kafka\"), including fetch payloads and protocol overhead.\n\nOn a shadow link source cluster this includes the data that shadow links fetch. It cannot be separated from regular consumer traffic on this cluster; use the target cluster's shadow link metrics for that breakdown."
     },
     {
       "datasource": {
@@ -3234,7 +3280,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Internal RPC Latency</h1>",
+        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Internal RPC</h1>",
         "mode": "html"
       },
       "pluginVersion": "",
@@ -3262,7 +3308,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Throughput</h1>",
+        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Partition Throughput</h1>",
         "mode": "html"
       },
       "pluginVersion": "",
@@ -3701,18 +3747,18 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_kafka_request_bytes_total{redpanda_request=\"consume\", instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_kafka_request_bytes_total{redpanda_request=\"consume\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "pod: {{pod}}, node: {{instance}}, namespace: {{namespace}}, partition: {{partition}}, shard: {{shard}}, topic: {{topic}}",
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
           "refId": "A",
           "step": 10
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Rate - Total number of bytes read",
+      "title": "Partition Reads",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -3743,7 +3789,8 @@
       ],
       "yaxis": {
         "align": false
-      }
+      },
+      "description": "Bytes read from partitions to serve fetch requests (redpanda_kafka_request_bytes_total, redpanda_request=\"consume\"). This measures storage and cache reads, not network egress.\n\nData is counted when it is read, before the fetch response is limited to the client's fetch.max.bytes. Data that does not fit is discarded and read again by a later fetch, so this can be much higher than Network Egress. A large gap usually means consumers fetch from many partitions per request with max.partition.fetch.bytes set high relative to fetch.max.bytes.\n\nIncludes reads made to serve shadow links when this cluster is a shadow link source."
     },
     {
       "aliasColors": {},
@@ -3766,7 +3813,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 30,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -3783,7 +3830,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -3837,8 +3884,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "percentage": false,
@@ -3858,18 +3905,32 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_kafka_request_bytes_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_request=\"produce\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[30s])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_kafka_request_bytes_total{redpanda_request=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "pod: {{pod}}, node: {{instance}}, namespace: {{namespace}}, partition: {{partition}}, shard: {{shard}}, topic: {{topic}}",
+          "legendFormat": "Produce · Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
           "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_written{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]], shadow_link_name)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Shadow link {{shadow_link_name}} · Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "B",
           "step": 10
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Rate - Total number of bytes written",
+      "title": "Partition Writes: Produce + Shadow Link",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -3900,7 +3961,332 @@
       ],
       "yaxis": {
         "align": false
-      }
+      },
+      "description": "Bytes written to partition leaders, stacked.\n\n- Produce: data written by producers (redpanda_kafka_request_bytes_total, redpanda_request=\"produce\").\n- Shadow link: data written to shadow topics (redpanda_shadow_link_total_bytes_written). Shadow links write directly to partitions without going through the Kafka produce path, so this data is not counted under Produce. Shown only on shadow link target clusters.\n\nEach byte is counted once, on the partition leader. Disk writes across the cluster are roughly this value multiplied by the topic replication factor."
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 78
+      },
+      "hiddenSeries": false,
+      "id": 23763572044,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "percentage": false,
+      "pluginVersion": "8.4.3-54429",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "span": 4,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_rpc_sent_bytes{redpanda_server=\"internal\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Internal RPC: Bytes Sent",
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "timeseries",
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      },
+      "description": "Broker-to-broker traffic on the internal RPC listener (redpanda_rpc_sent_bytes, redpanda_server=\"internal\"). This is mostly Raft replication from partition leaders to follower replicas, plus controller and other cluster traffic.\n\nReplication traffic grows with the topic replication factor. On a shadow link target cluster it includes replicating shadow topic data to followers."
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 78
+      },
+      "hiddenSeries": false,
+      "id": 23763572045,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "percentage": false,
+      "pluginVersion": "8.4.3-54429",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "span": 4,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_rpc_received_bytes{redpanda_server=\"internal\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Internal RPC: Bytes Received",
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "timeseries",
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      },
+      "description": "Broker-to-broker traffic on the internal RPC listener (redpanda_rpc_received_bytes, redpanda_server=\"internal\"). This is mostly Raft replication from partition leaders to follower replicas, plus controller and other cluster traffic.\n\nReplication traffic grows with the topic replication factor. On a shadow link target cluster it includes replicating shadow topic data to followers."
     },
     {
       "datasource": {
@@ -3962,7 +4348,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 78
+        "y": 86
       },
       "id": 156,
       "options": {
@@ -4036,7 +4422,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 78
+        "y": 86
       },
       "id": 155,
       "options": {
@@ -4198,7 +4584,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 87
+        "y": 95
       },
       "id": 23763572003,
       "options": {
@@ -4402,7 +4788,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 87
+        "y": 95
       },
       "id": 23763572009,
       "options": {
@@ -4518,7 +4904,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 95
+        "y": 103
       },
       "id": 23763572043,
       "options": {
