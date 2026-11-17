@@ -81,6 +81,16 @@
           "legendFormat": "{{shadow_link_name}}: {{state}}",
           "refId": "A",
           "instant": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "absent(redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "legendFormat": "Requires a Redpanda version newer than 26.2",
+          "refId": "B",
+          "instant": true
         }
       ],
       "options": {
@@ -92,15 +102,14 @@
           "values": false
         },
         "textMode": "name",
-        "colorMode": "value",
+        "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto"
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
-          "noValue": "Requires a Redpanda version newer than 26.2"
+          "unit": "short"
         },
         "overrides": []
       }
@@ -141,7 +150,7 @@
           "values": false
         },
         "textMode": "value_and_name",
-        "colorMode": "value",
+        "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto"
@@ -190,7 +199,7 @@
           "values": false
         },
         "textMode": "value",
-        "colorMode": "value",
+        "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto"
@@ -247,7 +256,7 @@
           "values": false
         },
         "textMode": "value_and_name",
-        "colorMode": "value",
+        "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto"
@@ -323,6 +332,7 @@
           "unit": "binBps",
           "min": 0,
           "custom": {
+            "axisLabel": "",
             "drawStyle": "line",
             "fillOpacity": 20,
             "lineWidth": 1,
@@ -384,9 +394,10 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "rps",
+          "unit": "short",
           "min": 0,
           "custom": {
+            "axisLabel": "records/s",
             "drawStyle": "line",
             "fillOpacity": 20,
             "lineWidth": 1,
@@ -442,6 +453,7 @@
           "unit": "binBps",
           "min": 0,
           "custom": {
+            "axisLabel": "",
             "drawStyle": "line",
             "fillOpacity": 20,
             "lineWidth": 1,
@@ -510,6 +522,7 @@
           "unit": "short",
           "min": 0,
           "custom": {
+            "axisLabel": "",
             "drawStyle": "line",
             "fillOpacity": 20,
             "lineWidth": 1,
@@ -565,6 +578,7 @@
           "unit": "short",
           "min": 0,
           "custom": {
+            "axisLabel": "",
             "drawStyle": "line",
             "fillOpacity": 20,
             "lineWidth": 1,
@@ -633,13 +647,14 @@
           "unit": "short",
           "min": 0,
           "custom": {
+            "axisLabel": "",
             "drawStyle": "line",
             "fillOpacity": 20,
             "lineWidth": 1,
             "showPoints": "never",
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             }
           },
           "noValue": "Requires a Redpanda version newer than 26.2"
@@ -654,7 +669,7 @@
       },
       "type": "stat",
       "title": "Failover phase",
-      "description": "Current phase of an in-progress or faulted failover, per link (redpanda_shadow_link_failover_phase). Only the controller leader reports a phase.\n\nHow to read: empty when no failover is running. finish_tasks = waiting for shadow link tasks to finish. fail_over_topics = failing over shadow topics.",
+      "description": "Current phase of an in-progress or faulted failover, per link (redpanda_shadow_link_failover_phase). Only the controller leader reports a phase.\n\nHow to read: finish_tasks = waiting for shadow link tasks to finish. fail_over_topics = failing over shadow topics.",
       "id": 15,
       "gridPos": {
         "x": 12,
@@ -672,6 +687,26 @@
           "legendFormat": "{{shadow_link_name}}: {{phase}}",
           "refId": "A",
           "instant": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "legendFormat": "Requires a Redpanda version newer than 26.2",
+          "refId": "B",
+          "instant": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} == 1) and on() count(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "legendFormat": "No failover in progress",
+          "refId": "C",
+          "instant": true
         }
       ],
       "options": {
@@ -683,15 +718,14 @@
           "values": false
         },
         "textMode": "name",
-        "colorMode": "value",
+        "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto"
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
-          "noValue": "No failover in progress"
+          "unit": "short"
         },
         "overrides": []
       }
@@ -732,7 +766,7 @@
           "values": false
         },
         "textMode": "value_and_name",
-        "colorMode": "value",
+        "colorMode": "none",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto"
