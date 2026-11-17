@@ -38,7 +38,7 @@
   "annotations": {
     "list": []
   },
-  "description": "Health and throughput of Redpanda shadow links, viewed from the target (shadow) cluster, which runs the replication and publishes the redpanda_shadow_link_* metrics. Point the data source at the target cluster's metrics.\n\nRequires Redpanda 25.3 or later. The Link state, Task instances and Failover panels use metrics added after 26.2 and show a placeholder on older versions.\n\nShadow link traffic also appears in the Redpanda Ops Dashboard's network ingress and partition write panels, so cluster sizing accounts for it.",
+  "description": "Health and throughput of Redpanda shadow links, viewed from the target (shadow) cluster, which runs the replication and publishes the redpanda_shadow_link_* metrics. Point the data source at the target cluster's metrics.\n\nRequires Redpanda 25.3 or later. The Link state, Task instances and Failover panels need Redpanda 26.3 or later and show a placeholder on older versions.\n\nShadow link traffic also appears in the Redpanda Ops Dashboard's network ingress and partition write panels, so cluster sizing accounts for it.",
   "editable": true,
   "graphTooltip": 1,
   "links": [],
@@ -63,7 +63,7 @@
       },
       "type": "stat",
       "title": "Link state",
-      "description": "Current state of each shadow link: active, paused, failing_over, failed_over, or failover_faulted (redpanda_shadow_link_state). Only the controller leader reports a state; other brokers report 0.\n\nHow to read: active = replicating normally. paused = replication stopped by an operator. failing_over / failed_over = a failover is in progress or done. failover_faulted = a failover stopped on an error; check the Failover panels and broker logs.",
+      "description": "Current state of each shadow link: active, paused, failing_over, failed_over, or failover_faulted (redpanda_shadow_link_state). Only the controller leader reports a state, so this panel covers the whole cluster of the selected nodes.\n\nHow to read: active = replicating normally. paused = replication stopped by an operator. failing_over / failed_over = a failover is in progress or done. failover_faulted = a failover stopped on an error; check the Failover panels and broker logs.",
       "id": 2,
       "gridPos": {
         "x": 0,
@@ -77,7 +77,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "max by (shadow_link_name, state) (redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1",
+          "expr": "(max by (cluster, shadow_link_name, state) (redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
           "legendFormat": "{{shadow_link_name}}: {{state}}",
           "refId": "A",
           "instant": true
@@ -87,8 +87,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "absent(redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
-          "legendFormat": "Requires a Redpanda version newer than 26.2",
+          "expr": "absent(redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "legendFormat": "Requires Redpanda 26.3 or later",
           "refId": "B",
           "instant": true
         }
@@ -135,7 +135,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (status) (max by (shadow_link_name, status) (redpanda_shadow_link_shadow_topic_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})) > 0",
+          "expr": "sum by (status) (max by (cluster, shadow_link_name, status) (redpanda_shadow_link_shadow_topic_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})) > 0",
           "legendFormat": "{{status}}",
           "refId": "A",
           "instant": true
@@ -263,7 +263,7 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "binBps"
+          "unit": "Bps"
         },
         "overrides": []
       }
@@ -329,7 +329,7 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "binBps",
+          "unit": "Bps",
           "min": 0,
           "custom": {
             "axisLabel": "",
@@ -450,7 +450,7 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "binBps",
+          "unit": "Bps",
           "min": 0,
           "custom": {
             "axisLabel": "",
@@ -657,7 +657,7 @@
               "mode": "none"
             }
           },
-          "noValue": "Requires a Redpanda version newer than 26.2"
+          "noValue": "Requires Redpanda 26.3 or later"
         },
         "overrides": []
       }
@@ -683,7 +683,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "max by (shadow_link_name, phase) (redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1",
+          "expr": "(max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
           "legendFormat": "{{shadow_link_name}}: {{phase}}",
           "refId": "A",
           "instant": true
@@ -693,8 +693,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
-          "legendFormat": "Requires a Redpanda version newer than 26.2",
+          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "legendFormat": "Requires Redpanda 26.3 or later",
           "refId": "B",
           "instant": true
         },
@@ -703,7 +703,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} == 1) and on() count(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} == 1) and on() count(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
           "legendFormat": "No failover in progress",
           "refId": "C",
           "instant": true
@@ -751,7 +751,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "time() - max by (shadow_link_name, phase) (redpanda_shadow_link_failover_phase_start_timestamp_seconds{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} > 0)",
+          "expr": "time() - (max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase_start_timestamp_seconds{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} > 0) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}))",
           "legendFormat": "{{shadow_link_name}}: {{phase}}",
           "refId": "A",
           "instant": true
@@ -825,7 +825,7 @@
       },
       {
         "name": "node",
-        "label": "Broker",
+        "label": "Node",
         "description": "Brokers that report shadow link metrics.",
         "type": "query",
         "datasource": {
@@ -854,7 +854,7 @@
       },
       {
         "name": "data_cluster",
-        "label": "Cloud cluster",
+        "label": "Data cluster",
         "description": "Redpanda Cloud cluster. Leave at All for self-managed clusters, whose metrics do not carry this label.",
         "type": "query",
         "datasource": {
@@ -885,7 +885,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
