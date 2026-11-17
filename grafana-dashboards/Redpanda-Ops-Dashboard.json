@@ -198,7 +198,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "count  by (app) (redpanda_application_uptime_seconds_total{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) OR on() vector(0)",
+          "expr": "count by (app) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) OR on() vector(0)",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -213,7 +213,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max_over_time(count by (app) (redpanda_application_uptime_seconds_total{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}   )[1w:])",
+          "expr": "max_over_time(count by (app) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})[1w:])",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -241,7 +241,8 @@
         }
       ],
       "transparent": true,
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -567,7 +568,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(redpanda_raft_leadership_changes{redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) ",
+          "expr": "sum(rate(redpanda_raft_leadership_changes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) ",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -581,7 +582,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_raft_leadership_changes{redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
+          "expr": "sum(rate(redpanda_raft_leadership_changes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
           "hide": true,
           "interval": "",
           "intervalFactor": 10,
@@ -590,7 +591,8 @@
         }
       ],
       "title": "Leadership Transfers / 5min",
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -650,7 +652,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0 OR on() vector(0)  ",
+          "expr": "sum (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})) > 0 OR on() vector(0)",
           "hide": false,
           "interval": "",
           "intervalFactor": 5,
@@ -659,7 +661,8 @@
         }
       ],
       "title": "Under replicated partitions by topic",
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report."
     },
     {
       "datasource": {
@@ -804,7 +807,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "100 * abs(1-(sum(stddev by (redpanda_topic) (sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",redpanda_cloud_data_cluster_name=~\"\"}) by (redpanda_topic,redpanda_partition))) /  sum(avg by (redpanda_topic) ((sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",redpanda_cloud_data_cluster_name=~\"\"}) by (redpanda_topic,redpanda_partition))))))",
+          "expr": "100 * abs(1-(sum(stddev by (cluster,redpanda_topic) (sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (cluster,redpanda_topic,redpanda_partition) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))) /  sum(avg by (cluster,redpanda_topic) (sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (cluster,redpanda_topic,redpanda_partition) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})))))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -816,14 +819,15 @@
         }
       ],
       "title": "Partition Offset Balance Deviation",
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "",
+      "description": "Covers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -889,7 +893,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum  (redpanda_cluster_unavailable_partitions{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} == -1) OR on() vector(0) + sum(max by(redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions ) - count by(redpanda_namespace, redpanda_topic) (count by (redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas)))",
+          "expr": "sum((max by(cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) - count by(cluster, redpanda_namespace, redpanda_topic) (count by (cluster, redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})) OR on() vector(0)",
           "format": "table",
           "instant": false,
           "interval": "",
@@ -1019,7 +1023,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "(1 - (\n  sum(redpanda_storage_disk_free_bytes{instance=~\".*\",shard=~\".*\",redpanda_cloud_data_cluster_name=~\"\"}) \n/\nsum(redpanda_storage_disk_total_bytes{instance=~\".*\",shard=~\".*\",redpanda_cloud_data_cluster_name=~\"\"}) \n))\n*\n100 ",
+          "expr": "(1 - (\n  sum(redpanda_storage_disk_free_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) \n/\nsum(redpanda_storage_disk_total_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) \n))\n*\n100 ",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1030,7 +1034,8 @@
         }
       ],
       "title": "Storage Used",
-      "type": "gauge"
+      "type": "gauge",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -1093,7 +1098,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "avg(deriv(redpanda_cpu_busy_seconds_total[$__rate_interval]))",
+          "expr": "avg(deriv(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1103,7 +1108,8 @@
         }
       ],
       "title": "CPU Utilization",
-      "type": "gauge"
+      "type": "gauge",
+      "description": "Covers the selected nodes."
     },
     {
       "aliasColors": {},
@@ -1589,14 +1595,15 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "max(redpanda_storage_disk_free_space_alert)",
+          "expr": "max(redpanda_storage_disk_free_space_alert{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Storage Health",
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -4217,7 +4224,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "topk by(redpanda_topic) (15, sum by(redpanda_topic, redpanda_namespace, redpanda_cloud_data_cluster_name) (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}!=0))",
+          "expr": "topk by(redpanda_topic) (15, sum by(redpanda_topic, redpanda_namespace, redpanda_cloud_data_cluster_name) ((redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}!=0) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})))",
           "hide": false,
           "interval": "",
           "intervalFactor": 5,
@@ -4227,14 +4234,15 @@
         }
       ],
       "title": "Under replicated partitions by topic",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "Covers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "\n",
+      "description": "\n\n\nCovers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4290,7 +4298,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by(redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions) - count by(redpanda_namespace, redpanda_topic) (count by (redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas)!=0)!=0",
+          "expr": "(max by(cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) - count by(cluster, redpanda_namespace, redpanda_topic) (count by (cluster, redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})!=0)!=0) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -4652,7 +4660,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(redpanda_raft_leadership_changes{redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_raft_leadership_changes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -4666,7 +4674,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_raft_leadership_changes{redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
+          "expr": "sum(rate(redpanda_raft_leadership_changes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -4675,7 +4683,8 @@
         }
       ],
       "title": "Leadership Transfers",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
