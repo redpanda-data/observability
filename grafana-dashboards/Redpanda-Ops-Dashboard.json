@@ -384,7 +384,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum by (cluster) (redpanda_cluster_topics{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
+          "expr": "count by (cluster) (max by (cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "refId": "A"
@@ -393,7 +393,7 @@
       "title": "Topics",
       "transparent": true,
       "type": "stat",
-      "description": "Number of topics in each cluster, including internal topics (redpanda_cluster_topics). Only the controller leader reports this metric, so the panel always shows cluster totals and ignores the Node and Aggregate by selections."
+      "description": "Number of topics, including internal topics, in the cluster of the selected nodes. Every broker reports every topic (redpanda_kafka_partitions), so any selected node gives the full cluster count. If the selection spans several clusters, each is shown separately."
     },
     {
       "datasource": {
@@ -728,7 +728,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by (cluster) (max by (cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))",
+          "expr": "sum by (cluster) (max by (cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "range": true,
@@ -738,7 +738,7 @@
       "title": "Partitions",
       "transparent": true,
       "type": "stat",
-      "description": "Number of partitions in each cluster, including internal topics (redpanda_kafka_partitions). Every broker reports the partition count of every topic, so the panel takes one value per topic and always shows cluster totals, ignoring the Node and Aggregate by selections."
+      "description": "Number of partitions, including internal topics, in the cluster of the selected nodes. Every broker reports the partition count of every topic (redpanda_kafka_partitions), so the panel takes one value per topic. If the selection spans several clusters, each is shown separately."
     },
     {
       "datasource": {
