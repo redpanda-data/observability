@@ -15,6 +15,10 @@ The following dashboards are provided as examples:
 
 - [Redpanda Ops Dashboard](grafana-dashboards/Redpanda-Ops-Dashboard.json) - Provides an overview of KPIs for a Redpanda
 cluster with health indicators. This is suitable for ops or SRE to monitor on a daily or continuous basis.
+- [Redpanda Shadow Link Dashboard](grafana-dashboards/Redpanda-Shadow-Link-Dashboard.json) - Health, throughput, lag,
+and failover progress of shadow links, viewed from the target (shadow) cluster. Requires Redpanda 25.3 or later; the link
+state, task, and failover panels need 26.3 or later. Shadow link traffic also appears in the Ops Dashboard's
+network ingress and partition write panels.
 - [Kafka Topic Metrics](grafana-dashboards/Kafka-Topic-Metrics.json) - Provides throughput, read/write rates, and 
 on-disk sizes of each/all topics.
 - [Kafka Consumer Offsets](grafana-dashboards/Kafka%20Consumer%20Offsets.json) - Metrics and KPIs that provide details 
