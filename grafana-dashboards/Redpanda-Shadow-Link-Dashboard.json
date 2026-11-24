@@ -1,0 +1,955 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__requires": [
+    {
+      "id": "grafana",
+      "name": "Grafana",
+      "type": "grafana",
+      "version": "10.4.0"
+    },
+    {
+      "id": "prometheus",
+      "name": "Prometheus",
+      "type": "datasource",
+      "version": "1.0.0"
+    },
+    {
+      "id": "stat",
+      "name": "Stat",
+      "type": "panel",
+      "version": ""
+    },
+    {
+      "id": "timeseries",
+      "name": "Time series",
+      "type": "panel",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": []
+  },
+  "description": "Health and throughput of Redpanda shadow links, viewed from the target (shadow) cluster, which runs the replication and publishes the redpanda_shadow_link_* metrics. Point the data source at the target cluster's metrics.\n\nRequires Redpanda 25.3 or later. The Link state, Task instances and Failover panels need Redpanda 26.3 or later and show a placeholder on older versions.\n\nShadow link traffic also appears in the Redpanda Ops Dashboard's network ingress and partition write panels, so cluster sizing accounts for it.",
+  "editable": true,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "type": "row",
+      "title": "Overview",
+      "id": 1,
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "stat",
+      "title": "Link state",
+      "description": "Current state of each shadow link: active, paused, failing_over, failed_over, or failover_faulted (redpanda_shadow_link_state). Only the controller leader reports a state, so this panel covers the whole cluster of the selected nodes.\n\nHow to read: active = replicating normally. paused = replication stopped by an operator. failing_over / failed_over = a failover is in progress or done. failover_faulted = a failover stopped on an error; check the Failover panels and broker logs.",
+      "id": 2,
+      "gridPos": {
+        "x": 0,
+        "y": 1,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "(max by (cluster, shadow_link_name, state) (redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (up{instance=~\"$node\",cluster=~\"$self_managed_cluster\"})",
+          "legendFormat": "{{shadow_link_name}}: {{state}}",
+          "refId": "A",
+          "instant": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "absent(redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "legendFormat": "Requires Redpanda 26.3 or later",
+          "refId": "B",
+          "instant": true
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "name",
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "stat",
+      "title": "Shadow topics by state",
+      "description": "Number of shadow topics in each state, across the selected links (redpanda_shadow_link_shadow_topic_state). Only the controller leader reports counts; other brokers report 0.\n\nHow to read: during normal replication every topic is active. Any failed topic needs attention. failing_over, failed_over, promoting and promoted appear during and after a failover.",
+      "id": 3,
+      "gridPos": {
+        "x": 6,
+        "y": 1,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum by (status) (max by (cluster, shadow_link_name, status) (redpanda_shadow_link_shadow_topic_state{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) and on (cluster) group by (cluster) (up{instance=~\"$node\",cluster=~\"$self_managed_cluster\"})) > 0",
+          "legendFormat": "{{status}}",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "No shadow topics"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "stat",
+      "title": "Max partition lag",
+      "description": "Largest lag of any shadow partition behind its source partition, in offsets (redpanda_shadow_link_shadow_lag). Lag is measured against the source partition's last stable offset. Partitions whose lag is not yet known (reported as -1) are excluded.\n\nHow to read: steady or near zero = keeping up. Rising without leveling off = the link is falling behind the source; check the throughput panels and the network path between clusters.",
+      "id": 4,
+      "gridPos": {
+        "x": 12,
+        "y": 1,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "max(redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
+          "legendFormat": "Max lag",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value",
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "No lag data"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "stat",
+      "title": "Replication throughput",
+      "description": "Bytes per second this cluster fetches from the source cluster and writes to shadow topics, across the selected links (redpanda_shadow_link_total_bytes_fetched / _written).\n\nFetched bytes are network ingress on this cluster and egress on the source cluster. Written bytes are counted once, on the partition leader; disk writes are roughly this times the replication factor.",
+      "id": 5,
+      "gridPos": {
+        "x": 18,
+        "y": 1,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "legendFormat": "Fetched",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "legendFormat": "Written",
+          "refId": "B"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "type": "row",
+      "title": "Throughput",
+      "id": 6,
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 6,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "timeseries",
+      "title": "Bytes fetched and written",
+      "description": "Bytes per second fetched from the source cluster and written to shadow topics, per link (redpanda_shadow_link_total_bytes_fetched / _total_bytes_written).\n\nHow to read: fetched and written should track each other. Written staying below fetched for a sustained period means data is arriving faster than it is written to shadow topics.\n\nThese counters reflect fetched batch data, not raw network bytes, so they do not include protocol overhead.",
+      "id": 7,
+      "gridPos": {
+        "x": 0,
+        "y": 7,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "legendFormat": "{{shadow_link_name}} fetched",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "legendFormat": "{{shadow_link_name}} written",
+          "refId": "B"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "min": 0,
+          "custom": {
+            "axisLabel": "",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "timeseries",
+      "title": "Records fetched and written",
+      "description": "Records per second fetched from the source cluster and written to shadow topics, per link (redpanda_shadow_link_total_records_fetched / _total_records_written).",
+      "id": 8,
+      "gridPos": {
+        "x": 12,
+        "y": 7,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "legendFormat": "{{shadow_link_name}} fetched",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "legendFormat": "{{shadow_link_name}} written",
+          "refId": "B"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "axisLabel": "records/s",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "timeseries",
+      "title": "Bytes fetched per broker",
+      "description": "Bytes per second each broker fetches from the source cluster, across the selected links. Each shadow partition is replicated by the broker that leads it, so this shows how shadow link network load is spread across brokers.",
+      "id": 9,
+      "gridPos": {
+        "x": 0,
+        "y": 15,
+        "w": 24,
+        "h": 7
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum by (instance, exported_instance) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "legendFormat": "{{instance}} {{exported_instance}}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "min": 0,
+          "custom": {
+            "axisLabel": "",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "type": "row",
+      "title": "Lag",
+      "id": 10,
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 22,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "timeseries",
+      "title": "Lag by topic",
+      "description": "Total lag of each shadow topic behind its source topic, in offsets, summed over its partitions (redpanda_shadow_link_shadow_lag). Partitions whose lag is not yet known (-1) are excluded.\n\nHow to read: a topic whose lag keeps growing is not keeping up with its source.",
+      "id": 11,
+      "gridPos": {
+        "x": 0,
+        "y": 23,
+        "w": 12,
+        "h": 9
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum by (shadow_link_name, redpanda_topic) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
+          "legendFormat": "{{shadow_link_name}} / {{redpanda_topic}}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "axisLabel": "",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "timeseries",
+      "title": "Top 10 lagging partitions",
+      "description": "The 10 shadow partitions furthest behind their source partitions, in offsets (redpanda_shadow_link_shadow_lag).\n\nHow to read: lag concentrated in a few partitions usually points to hot partitions on the source or a slow broker on this cluster; lag spread evenly points to overall link throughput.",
+      "id": 12,
+      "gridPos": {
+        "x": 12,
+        "y": 23,
+        "w": 12,
+        "h": 9
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "topk(10, max by (shadow_link_name, redpanda_topic, redpanda_partition) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0))",
+          "legendFormat": "{{shadow_link_name}} / {{redpanda_topic}}/{{redpanda_partition}}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "axisLabel": "",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "type": "row",
+      "title": "Tasks and failover",
+      "id": 13,
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "timeseries",
+      "title": "Task instances by state",
+      "description": "Number of shadow link task instances in each state, per task (redpanda_shadow_link_task_state). Each broker shard runs its own instance of each task.\n\nHow to read: during normal replication tasks are active. During a failover, the failover ends once every instance reports finished.",
+      "id": 14,
+      "gridPos": {
+        "x": 0,
+        "y": 33,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum by (shadow_link_name, task, state) (redpanda_shadow_link_task_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) > 0",
+          "legendFormat": "{{shadow_link_name}} / {{task}}: {{state}}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "custom": {
+            "axisLabel": "",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            }
+          },
+          "noValue": "Requires Redpanda 26.3 or later"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "stat",
+      "title": "Failover phase",
+      "description": "Current phase of an in-progress or faulted failover, per link (redpanda_shadow_link_failover_phase). Only the controller leader reports a phase.\n\nHow to read: finish_tasks = waiting for shadow link tasks to finish. fail_over_topics = failing over shadow topics.",
+      "id": 15,
+      "gridPos": {
+        "x": 12,
+        "y": 33,
+        "w": 6,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "(max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (up{instance=~\"$node\",cluster=~\"$self_managed_cluster\"})",
+          "legendFormat": "{{shadow_link_name}}: {{phase}}",
+          "refId": "A",
+          "instant": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "legendFormat": "Requires Redpanda 26.3 or later",
+          "refId": "B",
+          "instant": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} == 1) and on() count(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "legendFormat": "No failover in progress",
+          "refId": "C",
+          "instant": true
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "name",
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "type": "stat",
+      "title": "Time in failover phase",
+      "description": "How long the current failover phase has been running, per link (time() minus redpanda_shadow_link_failover_phase_start_timestamp_seconds).\n\nHow to read: empty when no failover is running. A phase that stays open much longer than usual may be stuck; check Task instances by state and broker logs.",
+      "id": 16,
+      "gridPos": {
+        "x": 18,
+        "y": 33,
+        "w": 6,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "time() - (max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase_start_timestamp_seconds{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} > 0) and on (cluster) group by (cluster) (up{instance=~\"$node\",cluster=~\"$self_managed_cluster\"}))",
+          "legendFormat": "{{shadow_link_name}}: {{phase}}",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "No failover in progress"
+        },
+        "overrides": []
+      }
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": [
+    "redpanda",
+    "shadow-link"
+  ],
+  "templating": {
+    "list": [
+      {
+        "label": "Data Source",
+        "name": "DS_PROMETHEUS",
+        "query": "prometheus",
+        "type": "datasource"
+      },
+      {
+        "name": "shadow_link",
+        "label": "Shadow link",
+        "description": "Shadow links on this cluster.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_shadow_link_total_bytes_fetched, shadow_link_name)",
+        "query": {
+          "query": "label_values(redpanda_shadow_link_total_bytes_fetched, shadow_link_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1
+      },
+      {
+        "name": "data_cluster",
+        "label": "Cloud cluster",
+        "description": "Redpanda Cloud only: filters on redpanda_cloud_data_cluster_name, which Redpanda Cloud adds to its metrics. Leave empty or at All for self-managed clusters, whose metrics do not carry this label; use Self-managed cluster instead.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_cloud_data_cluster_name)",
+        "query": {
+          "query": "label_values(redpanda_cloud_data_cluster_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1,
+        "hide": 0
+      },
+      {
+        "name": "self_managed_cluster",
+        "label": "Self-managed cluster",
+        "description": "Self-managed only: filters on the cluster label you set on each cluster's scrape targets in Prometheus (see the README). Redpanda does not emit this label, so All (.*) is a no-op until you add it; it is only needed when one Prometheus scrapes several self-managed clusters. Leave at All for Redpanda Cloud; use Cloud cluster instead.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_shadow_link_total_bytes_fetched, cluster)",
+        "query": {
+          "query": "label_values(redpanda_shadow_link_total_bytes_fetched, cluster)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1,
+        "hide": 0
+      },
+      {
+        "name": "node",
+        "label": "Node",
+        "description": "Scrape targets that report shadow link metrics. For self-managed clusters each target is a broker. For Redpanda Cloud the target is the cluster's metrics endpoint; pick brokers with Exported node.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_shadow_link_total_bytes_fetched{cluster=~\"$self_managed_cluster\"}, instance)",
+        "query": {
+          "query": "label_values(redpanda_shadow_link_total_bytes_fetched{cluster=~\"$self_managed_cluster\"}, instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1
+      },
+      {
+        "name": "exported_node",
+        "label": "Exported node",
+        "description": "Brokers behind a Redpanda Cloud metrics endpoint (exported_instance). Leave at All for self-managed clusters, whose metrics do not carry this label.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_shadow_link_total_bytes_fetched, exported_instance)",
+        "query": {
+          "query": "label_values(redpanda_shadow_link_total_bytes_fetched, exported_instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Redpanda Shadow Link Dashboard",
+  "uid": "redpanda-shadow-link",
+  "weekStart": ""
+}

@@ -9,6 +9,8 @@ scrape_configs:
     - redpanda-0:9644
     - redpanda-1:9644
     - redpanda-2:9644
+    labels:
+      cluster: redpanda
   metrics_path: /public_metrics
 - job_name: connect
   static_configs:

@@ -198,7 +198,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "count  by (app) (redpanda_application_uptime_seconds_total{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) OR on() vector(0)",
+          "expr": "count by (app) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) OR on() vector(0)",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -213,7 +213,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max_over_time(count by (app) (redpanda_application_uptime_seconds_total{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}   )[1w:])",
+          "expr": "max_over_time(count by (app) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})[1w:])",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -241,7 +241,8 @@
         }
       ],
       "transparent": true,
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -305,7 +306,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (exported_instance, instance) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
+          "expr": "sum by (exported_instance, instance) (redpanda_application_uptime_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -384,15 +385,16 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(redpanda_cluster_topics) by ([[aggr_criteria]])",
+          "expr": "count by (cluster) (max by (cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))",
           "interval": "",
-          "legendFormat": "Partition count",
+          "legendFormat": "{{cluster}}",
           "refId": "A"
         }
       ],
       "title": "Topics",
       "transparent": true,
-      "type": "stat"
+      "type": "stat",
+      "description": "Number of topics, including internal topics, in the cluster of the selected nodes. Every broker reports every topic (redpanda_kafka_partitions), so any selected node gives the full cluster count. If the selection spans several clusters, each is shown separately."
     },
     {
       "datasource": {
@@ -451,7 +453,7 @@
           "values": false
         },
         "text": {},
-        "textMode": "auto"
+        "textMode": "value_and_name"
       },
       "pluginVersion": "9.3.6",
       "targets": [
@@ -460,18 +462,48 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum by([[aggr_criteria]])(rate(redpanda_kafka_request_bytes_total[1m]))",
+          "expr": "sum(rate(redpanda_rpc_received_bytes{redpanda_server=\"kafka\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m]))",
+          "format": "time_series",
           "interval": "",
-          "legendFormat": "Partition count",
-          "range": true,
-          "refId": "A"
+          "intervalFactor": 2,
+          "legendFormat": "Client ingress",
+          "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m]))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Shadow link ingress",
+          "refId": "B",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_rpc_sent_bytes{redpanda_server=\"kafka\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m]))",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Client egress",
+          "refId": "C",
+          "step": 10
         }
       ],
-      "title": "Throughput",
+      "title": "Network Throughput",
       "transparent": true,
-      "type": "stat"
+      "type": "stat",
+      "description": "Bytes per second on the network, summed across the selected brokers.\n\n- Client ingress / egress: all traffic on the Kafka API listeners (redpanda_rpc_received_bytes / redpanda_rpc_sent_bytes with redpanda_server=\"kafka\"). Includes produce and fetch payloads plus metadata, offset commits, and other protocol traffic.\n- Shadow link ingress: data this cluster fetches from the source cluster of a shadow link (redpanda_shadow_link_total_bytes_fetched). The shadow link is a client of the source cluster, so this traffic does not appear in client ingress. Shown only on clusters that are the target of a shadow link.\n\nOn a shadow link source cluster, client egress includes the data that shadow links fetch."
     },
     {
       "datasource": {
@@ -536,7 +568,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(redpanda_raft_leadership_changes{redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) ",
+          "expr": "sum(rate(redpanda_raft_leadership_changes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) ",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -550,7 +582,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_raft_leadership_changes{redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
+          "expr": "sum(rate(redpanda_raft_leadership_changes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
           "hide": true,
           "interval": "",
           "intervalFactor": 10,
@@ -559,7 +591,8 @@
         }
       ],
       "title": "Leadership Transfers / 5min",
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -619,7 +652,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) > 0 OR on() vector(0)  ",
+          "expr": "sum (redpanda_kafka_under_replicated_replicas{cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} and on (cluster) group by (cluster) (up{instance=~\"[[node]]\",cluster=~\"[[self_managed_cluster]]\"})) > 0 OR on() vector(0)",
           "hide": false,
           "interval": "",
           "intervalFactor": 5,
@@ -628,7 +661,8 @@
         }
       ],
       "title": "Under replicated partitions by topic",
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report."
     },
     {
       "datasource": {
@@ -697,16 +731,17 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(min by(redpanda_topic) (redpanda_kafka_partitions{redpanda_cloud_data_cluster_name=~\"\"}))",
+          "expr": "sum by (cluster) (max by (cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))",
           "interval": "",
-          "legendFormat": "Partition count",
+          "legendFormat": "{{cluster}}",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Partitions",
       "transparent": true,
-      "type": "stat"
+      "type": "stat",
+      "description": "Number of partitions, including internal topics, in the cluster of the selected nodes. Every broker reports the partition count of every topic (redpanda_kafka_partitions), so the panel takes one value per topic. If the selection spans several clusters, each is shown separately."
     },
     {
       "datasource": {
@@ -772,7 +807,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "100 * abs(1-(sum(stddev by (redpanda_topic) (sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",redpanda_cloud_data_cluster_name=~\"\"}) by (redpanda_topic,redpanda_partition))) /  sum(avg by (redpanda_topic) ((sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",redpanda_cloud_data_cluster_name=~\"\"}) by (redpanda_topic,redpanda_partition))))))",
+          "expr": "100 * abs(1-(sum(stddev by (cluster,redpanda_topic) (sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (cluster,redpanda_topic,redpanda_partition) and on (cluster) group by (cluster) (up{instance=~\"[[node]]\",cluster=~\"[[self_managed_cluster]]\"}))) /  sum(avg by (cluster,redpanda_topic) (sum(redpanda_kafka_max_offset{redpanda_namespace=\"kafka\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by (cluster,redpanda_topic,redpanda_partition) and on (cluster) group by (cluster) (up{instance=~\"[[node]]\",cluster=~\"[[self_managed_cluster]]\"})))))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -784,14 +819,15 @@
         }
       ],
       "title": "Partition Offset Balance Deviation",
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "",
+      "description": "Covers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -857,7 +893,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum  (redpanda_cluster_unavailable_partitions{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} == -1) OR on() vector(0) + sum(max by(redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions ) - count by(redpanda_namespace, redpanda_topic) (count by (redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas)))",
+          "expr": "sum((max by(cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) - count by(cluster, redpanda_namespace, redpanda_topic) (count by (cluster, redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas{cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}))) and on (cluster) group by (cluster) (up{instance=~\"[[node]]\",cluster=~\"[[self_managed_cluster]]\"})) OR on() vector(0)",
           "format": "table",
           "instant": false,
           "interval": "",
@@ -987,7 +1023,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "(1 - (\n  sum(redpanda_storage_disk_free_bytes{instance=~\".*\",shard=~\".*\",redpanda_cloud_data_cluster_name=~\"\"}) \n/\nsum(redpanda_storage_disk_total_bytes{instance=~\".*\",shard=~\".*\",redpanda_cloud_data_cluster_name=~\"\"}) \n))\n*\n100 ",
+          "expr": "(1 - (\n  sum(redpanda_storage_disk_free_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) \n/\nsum(redpanda_storage_disk_total_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) \n))\n*\n100 ",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -998,7 +1034,8 @@
         }
       ],
       "title": "Storage Used",
-      "type": "gauge"
+      "type": "gauge",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -1061,7 +1098,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "avg(deriv(redpanda_cpu_busy_seconds_total[$__rate_interval]))",
+          "expr": "avg(deriv(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1071,7 +1108,8 @@
         }
       ],
       "title": "CPU Utilization",
-      "type": "gauge"
+      "type": "gauge",
+      "description": "Covers the selected nodes."
     },
     {
       "aliasColors": {},
@@ -1210,7 +1248,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(redpanda_rpc_active_connections{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
+          "expr": "sum(redpanda_rpc_active_connections{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -1225,7 +1263,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(redpanda_rpc_active_connections{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset 1d) by (redpanda_cloud_data_cluster_name)",
+          "expr": "sum(redpanda_rpc_active_connections{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} offset 1d) by (redpanda_cloud_data_cluster_name)",
           "hide": true,
           "legendFormat": "Yesterday cluster avg",
           "range": true,
@@ -1425,7 +1463,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "redpanda_application_build{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} * on (instance, exported_instance) group_left redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}",
+          "expr": "redpanda_application_build{cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"} * on (instance, exported_instance) group_left redpanda_application_uptime_seconds_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1473,7 +1511,7 @@
               "instance": "Node IP",
               "namespace": "Namespace",
               "pod": "POD",
-              "redpanda_cloud_data_cluster_name": "Data Cluster",
+              "redpanda_cloud_data_cluster_name": "Cloud Cluster",
               "shard": ""
             }
           }
@@ -1557,14 +1595,15 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "max(redpanda_storage_disk_free_space_alert)",
+          "expr": "max(redpanda_storage_disk_free_space_alert{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "Storage Health",
-      "type": "stat"
+      "type": "stat",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -1673,7 +1712,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",exported_instance=~\"[[exported_node]]\",instance=~\"[[node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",exported_instance=~\"[[exported_node]]\",instance=~\"[[node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1688,7 +1727,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",exported_instance=~\"[[exported_node]]\",instance=~\"[[node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",exported_instance=~\"[[exported_node]]\",instance=~\"[[node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -1702,7 +1741,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.95 , sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",exported_instance=~\"[[exported_node]]\",instance=~\"[[node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.95 , sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",exported_instance=~\"[[exported_node]]\",instance=~\"[[node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1718,7 +1757,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",exported_instance=~\"[[exported_node]]\",instance=~\"[[node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",exported_instance=~\"[[exported_node]]\",instance=~\"[[node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -1838,7 +1877,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_io_queue_total_write_ops{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_io_queue_total_write_ops{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1853,7 +1892,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_io_queue_total_write_ops{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
+          "expr": "sum(rate(redpanda_io_queue_total_write_ops{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -1904,7 +1943,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -1925,7 +1964,7 @@
               }
             ]
           },
-          "unit": "binBps"
+          "unit": "Bps"
         },
         "overrides": []
       },
@@ -1960,8 +1999,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "percentage": false,
@@ -1981,18 +2020,32 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_kafka_request_bytes_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_request=\"produce\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_rpc_received_bytes{redpanda_server=\"kafka\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "legendFormat": "Clients · Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
           "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]], shadow_link_name)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Shadow link {{shadow_link_name}} · Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "B",
           "step": 10
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Bytes Received via Kafka RPC",
+      "title": "Network Ingress: Kafka API + Shadow Link",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -2023,7 +2076,8 @@
       ],
       "yaxis": {
         "align": false
-      }
+      },
+      "description": "Bytes received over the network, stacked.\n\n- Clients: all traffic received on the Kafka API listeners (redpanda_rpc_received_bytes, redpanda_server=\"kafka\"), including produce payloads and protocol overhead.\n- Shadow link: data fetched from the source cluster of each shadow link (redpanda_shadow_link_total_bytes_fetched). This cluster is the client on those connections, so they are not counted under Clients. Shown only on shadow link target clusters.\n\nBroker-to-broker replication traffic is shown separately in the Internal RPC: Bytes Received panel."
     },
     {
       "datasource": {
@@ -2132,7 +2186,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2147,7 +2201,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -2161,7 +2215,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.95 , sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.95 , sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2177,7 +2231,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -2298,7 +2352,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(redpanda_io_queue_total_read_ops{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_io_queue_total_read_ops{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2313,7 +2367,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_io_queue_total_read_ops{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
+          "expr": "sum(rate(redpanda_io_queue_total_read_ops{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -2385,7 +2439,7 @@
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "Bps"
         },
         "overrides": []
       },
@@ -2441,7 +2495,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_kafka_request_bytes_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_request=\"consume\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[30s])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_rpc_sent_bytes{redpanda_server=\"kafka\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2452,7 +2506,7 @@
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Bytes Sent via Kafka RPC",
+      "title": "Network Egress: Kafka API",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -2483,7 +2537,8 @@
       ],
       "yaxis": {
         "align": false
-      }
+      },
+      "description": "Bytes sent on the Kafka API listeners (redpanda_rpc_sent_bytes, redpanda_server=\"kafka\"), including fetch payloads and protocol overhead.\n\nOn a shadow link source cluster this includes the data that shadow links fetch. It cannot be separated from regular consumer traffic on this cluster; use the target cluster's shadow link metrics for that breakdown."
     },
     {
       "datasource": {
@@ -2578,7 +2633,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "max by (exported_instance, instance) (redpanda_memory_available_memory{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
+          "expr": "max by (exported_instance, instance) (redpanda_memory_available_memory{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2658,7 +2713,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "max by (exported_instance, instance) (redpanda_memory_available_memory_low_water_mark{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
+          "expr": "max by (exported_instance, instance) (redpanda_memory_available_memory_low_water_mark{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2805,7 +2860,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2819,7 +2874,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -2933,7 +2988,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2947,7 +3002,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -3061,7 +3116,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -3075,7 +3130,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -3189,7 +3244,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"$node\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"$node\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -3203,7 +3258,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"$node\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_kafka_handler_latency_seconds_bucket{handler=\"fetch\",instance=~\"$node\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (le, cluster))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -3234,7 +3289,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Internal RPC Latency</h1>",
+        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Internal RPC</h1>",
         "mode": "html"
       },
       "pluginVersion": "",
@@ -3262,7 +3317,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Throughput</h1>",
+        "content": "<h1 style=\"color:#87CEEB; border-bottom: 3px solid #87CEEB;\">Partition Throughput</h1>",
         "mode": "html"
       },
       "pluginVersion": "",
@@ -3335,7 +3390,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 6,
-        "w": 6,
+        "w": 4,
         "x": 0,
         "y": 72
       },
@@ -3383,7 +3438,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(redpanda_rpc_request_latency_seconds_bucket{redpanda_server=\"internal\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.95, sum(rate(redpanda_rpc_request_latency_seconds_bucket{redpanda_server=\"internal\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -3494,8 +3549,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 6,
-        "w": 6,
-        "x": 6,
+        "w": 4,
+        "x": 4,
         "y": 72
       },
       "hiddenSeries": false,
@@ -3542,7 +3597,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum(rate(redpanda_rpc_request_latency_seconds_bucket{redpanda_server=\"internal\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
+          "expr": "histogram_quantile(0.99, sum(rate(redpanda_rpc_request_latency_seconds_bucket{redpanda_server=\"internal\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by (le, [[aggr_criteria]]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -3587,6 +3642,168 @@
       "yaxis": {
         "align": false
       }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "editable": true,
+      "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 8,
+        "y": 72
+      },
+      "hiddenSeries": false,
+      "id": 23763572045,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "percentage": false,
+      "pluginVersion": "8.4.3-54429",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "span": 4,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_rpc_received_bytes{redpanda_server=\"internal\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Internal RPC: Bytes Received",
+      "tooltip": {
+        "msResolution": true,
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "timeseries",
+      "xaxis": {
+        "format": "",
+        "logBase": 0,
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "min": 0,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      },
+      "description": "Bytes each broker receives from other brokers on the internal RPC listener (redpanda_rpc_received_bytes, redpanda_server=\"internal\"). This is mostly Raft replication from partition leaders to follower replicas, plus controller and other cluster traffic. Every inter-broker request is received by exactly one broker, so the cluster-wide sum is the total inter-broker data volume.\n\nReplication traffic grows with the topic replication factor. On a shadow link target cluster it includes replicating shadow topic data to followers.\n\nThe matching sent-bytes metric on this listener only counts responses, which are small, so it is not shown."
     },
     {
       "aliasColors": {},
@@ -3701,18 +3918,18 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_kafka_request_bytes_total{redpanda_request=\"consume\", instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_kafka_request_bytes_total{redpanda_request=\"consume\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "pod: {{pod}}, node: {{instance}}, namespace: {{namespace}}, partition: {{partition}}, shard: {{shard}}, topic: {{topic}}",
+          "legendFormat": "Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
           "refId": "A",
           "step": 10
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Rate - Total number of bytes read",
+      "title": "Partition Reads",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -3743,7 +3960,8 @@
       ],
       "yaxis": {
         "align": false
-      }
+      },
+      "description": "Bytes read from partitions to serve fetch requests (redpanda_kafka_request_bytes_total, redpanda_request=\"consume\"). This measures storage and cache reads, not network egress.\n\nData is counted when it is read, before the fetch response is limited to the client's fetch.max.bytes. Data that does not fit is discarded and read again by a later fetch, so this can be much higher than Network Egress. A large gap usually means consumers fetch from many partitions per request with max.partition.fetch.bytes set high relative to fetch.max.bytes.\n\nIncludes reads made to serve shadow links when this cluster is a shadow link source."
     },
     {
       "aliasColors": {},
@@ -3766,7 +3984,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 30,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -3783,7 +4001,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -3837,8 +4055,8 @@
           "showLegend": true
         },
         "tooltip": {
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "percentage": false,
@@ -3858,18 +4076,32 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_kafka_request_bytes_total{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",redpanda_request=\"produce\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[30s])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_kafka_request_bytes_total{redpanda_request=\"produce\",instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "pod: {{pod}}, node: {{instance}}, namespace: {{namespace}}, partition: {{partition}}, shard: {{shard}}, topic: {{topic}}",
+          "legendFormat": "Produce · Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
           "refId": "A",
+          "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "exemplar": true,
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_written{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]], shadow_link_name)",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "Shadow link {{shadow_link_name}} · Pod: {{pod}}, Node: {{instance}}, Shard: {{shard}}",
+          "refId": "B",
           "step": 10
         }
       ],
       "thresholds": [],
       "timeRegions": [],
-      "title": "Rate - Total number of bytes written",
+      "title": "Partition Writes: Produce + Shadow Link",
       "tooltip": {
         "msResolution": true,
         "shared": true,
@@ -3900,7 +4132,8 @@
       ],
       "yaxis": {
         "align": false
-      }
+      },
+      "description": "Bytes written to partition leaders, stacked.\n\n- Produce: data written by producers (redpanda_kafka_request_bytes_total, redpanda_request=\"produce\").\n- Shadow link: data written to shadow topics (redpanda_shadow_link_total_bytes_written). Shadow links write directly to partitions without going through the Kafka produce path, so this data is not counted under Produce. Shown only on shadow link target clusters.\n\nEach byte is counted once, on the partition leader. Disk writes across the cluster are roughly this value multiplied by the topic replication factor."
     },
     {
       "datasource": {
@@ -3991,7 +4224,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "topk by(redpanda_topic) (15, sum by(redpanda_topic, redpanda_namespace, redpanda_cloud_data_cluster_name) (redpanda_kafka_under_replicated_replicas{redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}!=0))",
+          "expr": "topk by(redpanda_topic) (15, sum by(redpanda_topic, redpanda_namespace, redpanda_cloud_data_cluster_name) ((redpanda_kafka_under_replicated_replicas{cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}!=0) and on (cluster) group by (cluster) (up{instance=~\"[[node]]\",cluster=~\"[[self_managed_cluster]]\"})))",
           "hide": false,
           "interval": "",
           "intervalFactor": 5,
@@ -4001,14 +4234,15 @@
         }
       ],
       "title": "Under replicated partitions by topic",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "Covers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "\n",
+      "description": "\n\n\nCovers the whole cluster that the selected nodes belong to, because this is a cluster-wide measure that individual brokers only partly report.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4064,7 +4298,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by(redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions) - count by(redpanda_namespace, redpanda_topic) (count by (redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas)!=0)!=0",
+          "expr": "(max by(cluster, redpanda_namespace, redpanda_topic) (redpanda_kafka_partitions{cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) - count by(cluster, redpanda_namespace, redpanda_topic) (count by (cluster, redpanda_namespace, redpanda_topic, redpanda_partition) (redpanda_kafka_under_replicated_replicas{cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"})!=0)!=0) and on (cluster) group by (cluster) (up{instance=~\"[[node]]\",cluster=~\"[[self_managed_cluster]]\"})",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -4222,7 +4456,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "avg by([[aggr_criteria]]) (deriv(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\", redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval]))",
+          "expr": "avg by([[aggr_criteria]]) (deriv(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\", cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -4237,7 +4471,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "avg by([[aggr_criteria]]) (deriv(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\", redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval] offset 1d))",
+          "expr": "avg by([[aggr_criteria]]) (deriv(redpanda_cpu_busy_seconds_total{instance=~\"[[node]]\", exported_instance=~\"[[exported_node]]\",shard=~\"[[node_shard]]\", cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[$__rate_interval] offset 1d))",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -4426,7 +4660,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(redpanda_raft_leadership_changes{redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
+          "expr": "sum(rate(redpanda_raft_leadership_changes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m])) by ([[aggr_criteria]])",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -4440,7 +4674,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(rate(redpanda_raft_leadership_changes{redpanda_cloud_data_cluster_name=\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
+          "expr": "sum(rate(redpanda_raft_leadership_changes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}[5m] offset 1d)) by (cluster)",
           "hide": false,
           "interval": "",
           "intervalFactor": 10,
@@ -4449,7 +4683,8 @@
         }
       ],
       "title": "Leadership Transfers",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "Covers the selected nodes."
     },
     {
       "datasource": {
@@ -4543,7 +4778,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "1 - sum(redpanda_storage_disk_free_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])/sum(redpanda_storage_disk_total_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
+          "expr": "1 - sum(redpanda_storage_disk_free_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])/sum(redpanda_storage_disk_total_bytes{instance=~\"[[node]]\",exported_instance=~\"[[exported_node]]\",cluster=~\"[[self_managed_cluster]]\",redpanda_cloud_data_cluster_name=~\"[[data_cluster]]\"}) by ([[aggr_criteria]])",
           "instant": false,
           "legendFormat": "Pod: {{pod}}, Node: {{instance}}",
           "range": true,
@@ -4579,6 +4814,63 @@
         "type": "datasource"
       },
       {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_cloud_data_cluster_name)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Cloud cluster",
+        "multi": true,
+        "name": "data_cluster",
+        "options": [],
+        "query": {
+          "query": "label_values(redpanda_cloud_data_cluster_name)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false,
+        "description": "Redpanda Cloud only: filters on redpanda_cloud_data_cluster_name, which Redpanda Cloud adds to its metrics. Leave empty or at All for self-managed clusters, whose metrics do not carry this label; use Self-managed cluster instead."
+      },
+      {
+        "name": "self_managed_cluster",
+        "label": "Self-managed cluster",
+        "description": "Self-managed only: filters on the cluster label you set on each cluster's scrape targets in Prometheus (see the README). Redpanda does not emit this label, so All (.*) is a no-op until you add it; it is only needed when one Prometheus scrapes several self-managed clusters. Leave at All for Redpanda Cloud; use Cloud cluster instead.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(up, cluster)",
+        "query": {
+          "query": "label_values(up, cluster)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1,
+        "hide": 0
+      },
+      {
         "allFormat": "",
         "allValue": ".*",
         "current": {},
@@ -4586,7 +4878,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "",
+        "definition": "label_values(up{cluster=~\"$self_managed_cluster\"}, instance)",
         "hide": 0,
         "includeAll": true,
         "label": "Node",
@@ -4595,7 +4887,7 @@
         "name": "node",
         "options": [],
         "query": {
-          "query": "label_values(instance)",
+          "query": "label_values(up{cluster=~\"$self_managed_cluster\"}, instance)",
           "refId": "grafanacloud-redpandaio-prom-node-Variable-Query"
         },
         "refresh": 1,
@@ -4712,32 +5004,6 @@
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(redpanda_cloud_data_cluster_name)",
-        "hide": 0,
-        "includeAll": false,
-        "label": "Data cluster",
-        "multi": true,
-        "name": "data_cluster",
-        "options": [],
-        "query": {
-          "query": "label_values(redpanda_cloud_data_cluster_name)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
       },
       {
         "datasource": {
