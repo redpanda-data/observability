@@ -184,7 +184,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "max(redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
+          "expr": "max(redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
           "legendFormat": "Max lag",
           "refId": "A",
           "instant": true
@@ -233,7 +233,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "Fetched",
           "refId": "A"
         },
@@ -242,7 +242,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "Written",
           "refId": "B"
         }
@@ -302,7 +302,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{shadow_link_name}} fetched",
           "refId": "A"
         },
@@ -311,7 +311,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{shadow_link_name}} written",
           "refId": "B"
         }
@@ -367,7 +367,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{shadow_link_name}} fetched",
           "refId": "A"
         },
@@ -376,7 +376,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{shadow_link_name}} written",
           "refId": "B"
         }
@@ -432,8 +432,8 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (instance) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
-          "legendFormat": "{{instance}}",
+          "expr": "sum by (instance, exported_instance) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "legendFormat": "{{instance}} {{exported_instance}}",
           "refId": "A"
         }
       ],
@@ -501,7 +501,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name, redpanda_topic) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
+          "expr": "sum by (shadow_link_name, redpanda_topic) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
           "legendFormat": "{{shadow_link_name}} / {{redpanda_topic}}",
           "refId": "A"
         }
@@ -557,7 +557,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "topk(10, max by (shadow_link_name, redpanda_topic, redpanda_partition) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0))",
+          "expr": "topk(10, max by (shadow_link_name, redpanda_topic, redpanda_partition) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0))",
           "legendFormat": "{{shadow_link_name}} / {{redpanda_topic}}/{{redpanda_partition}}",
           "refId": "A"
         }
@@ -626,7 +626,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name, task, state) (redpanda_shadow_link_task_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) > 0",
+          "expr": "sum by (shadow_link_name, task, state) (redpanda_shadow_link_task_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) > 0",
           "legendFormat": "{{shadow_link_name}} / {{task}}: {{state}}",
           "refId": "A"
         }
@@ -826,7 +826,7 @@
       {
         "name": "node",
         "label": "Node",
-        "description": "Brokers that report shadow link metrics.",
+        "description": "Scrape targets that report shadow link metrics. For self-managed clusters each target is a broker. For Redpanda Cloud the target is the cluster's metrics endpoint; pick brokers with Exported node.",
         "type": "query",
         "datasource": {
           "type": "prometheus",
@@ -835,6 +835,35 @@
         "definition": "label_values(redpanda_shadow_link_total_bytes_fetched, instance)",
         "query": {
           "query": "label_values(redpanda_shadow_link_total_bytes_fetched, instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1
+      },
+      {
+        "name": "exported_node",
+        "label": "Exported node",
+        "description": "Brokers behind a Redpanda Cloud metrics endpoint (exported_instance). Leave at All for self-managed clusters, whose metrics do not carry this label.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_shadow_link_total_bytes_fetched, exported_instance)",
+        "query": {
+          "query": "label_values(redpanda_shadow_link_total_bytes_fetched, exported_instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "includeAll": true,
