@@ -77,7 +77,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "(max by (cluster, shadow_link_name, state) (redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (up{instance=~\"$node\"})",
+          "expr": "(max by (cluster, shadow_link_name, state) (redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (up{instance=~\"$node\",cluster=~\"$self_managed_cluster\"})",
           "legendFormat": "{{shadow_link_name}}: {{state}}",
           "refId": "A",
           "instant": true
@@ -87,7 +87,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "absent(redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "expr": "absent(redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
           "legendFormat": "Requires Redpanda 26.3 or later",
           "refId": "B",
           "instant": true
@@ -135,7 +135,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (status) (max by (cluster, shadow_link_name, status) (redpanda_shadow_link_shadow_topic_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) and on (cluster) group by (cluster) (up{instance=~\"$node\"})) > 0",
+          "expr": "sum by (status) (max by (cluster, shadow_link_name, status) (redpanda_shadow_link_shadow_topic_state{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) and on (cluster) group by (cluster) (up{instance=~\"$node\",cluster=~\"$self_managed_cluster\"})) > 0",
           "legendFormat": "{{status}}",
           "refId": "A",
           "instant": true
@@ -184,7 +184,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "max(redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
+          "expr": "max(redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
           "legendFormat": "Max lag",
           "refId": "A",
           "instant": true
@@ -233,7 +233,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "Fetched",
           "refId": "A"
         },
@@ -242,7 +242,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum(rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "Written",
           "refId": "B"
         }
@@ -302,7 +302,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{shadow_link_name}} fetched",
           "refId": "A"
         },
@@ -311,7 +311,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_bytes_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{shadow_link_name}} written",
           "refId": "B"
         }
@@ -367,7 +367,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{shadow_link_name}} fetched",
           "refId": "A"
         },
@@ -376,7 +376,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (shadow_link_name) (rate(redpanda_shadow_link_total_records_written{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{shadow_link_name}} written",
           "refId": "B"
         }
@@ -432,7 +432,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (instance, exported_instance) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
+          "expr": "sum by (instance, exported_instance) (rate(redpanda_shadow_link_total_bytes_fetched{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}[5m]))",
           "legendFormat": "{{instance}} {{exported_instance}}",
           "refId": "A"
         }
@@ -501,7 +501,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name, redpanda_topic) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
+          "expr": "sum by (shadow_link_name, redpanda_topic) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0)",
           "legendFormat": "{{shadow_link_name}} / {{redpanda_topic}}",
           "refId": "A"
         }
@@ -557,7 +557,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "topk(10, max by (shadow_link_name, redpanda_topic, redpanda_partition) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0))",
+          "expr": "topk(10, max by (shadow_link_name, redpanda_topic, redpanda_partition) (redpanda_shadow_link_shadow_lag{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} >= 0))",
           "legendFormat": "{{shadow_link_name}} / {{redpanda_topic}}/{{redpanda_partition}}",
           "refId": "A"
         }
@@ -626,7 +626,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (shadow_link_name, task, state) (redpanda_shadow_link_task_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) > 0",
+          "expr": "sum by (shadow_link_name, task, state) (redpanda_shadow_link_task_state{shadow_link_name=~\"$shadow_link\",instance=~\"$node\",exported_instance=~\"$exported_node\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) > 0",
           "legendFormat": "{{shadow_link_name}} / {{task}}: {{state}}",
           "refId": "A"
         }
@@ -683,7 +683,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "(max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (up{instance=~\"$node\"})",
+          "expr": "(max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (up{instance=~\"$node\",cluster=~\"$self_managed_cluster\"})",
           "legendFormat": "{{shadow_link_name}}: {{phase}}",
           "refId": "A",
           "instant": true
@@ -693,7 +693,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
           "legendFormat": "Requires Redpanda 26.3 or later",
           "refId": "B",
           "instant": true
@@ -703,7 +703,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} == 1) and on() count(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "expr": "absent(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} == 1) and on() count(redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
           "legendFormat": "No failover in progress",
           "refId": "C",
           "instant": true
@@ -751,7 +751,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "time() - (max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase_start_timestamp_seconds{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} > 0) and on (cluster) group by (cluster) (up{instance=~\"$node\"}))",
+          "expr": "time() - (max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase_start_timestamp_seconds{shadow_link_name=~\"$shadow_link\",cluster=~\"$self_managed_cluster\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} > 0) and on (cluster) group by (cluster) (up{instance=~\"$node\",cluster=~\"$self_managed_cluster\"}))",
           "legendFormat": "{{shadow_link_name}}: {{phase}}",
           "refId": "A",
           "instant": true
@@ -824,6 +824,66 @@
         "sort": 1
       },
       {
+        "name": "data_cluster",
+        "label": "Cloud cluster",
+        "description": "Redpanda Cloud only: filters on redpanda_cloud_data_cluster_name, which Redpanda Cloud adds to its metrics. Leave empty or at All for self-managed clusters, whose metrics do not carry this label; use Self-managed cluster instead.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_cloud_data_cluster_name)",
+        "query": {
+          "query": "label_values(redpanda_cloud_data_cluster_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1,
+        "hide": 0
+      },
+      {
+        "name": "self_managed_cluster",
+        "label": "Self-managed cluster",
+        "description": "Self-managed only: filters on the cluster label you set on each cluster's scrape targets in Prometheus (see the README). Redpanda does not emit this label, so All (.*) is a no-op until you add it; it is only needed when one Prometheus scrapes several self-managed clusters. Leave at All for Redpanda Cloud; use Cloud cluster instead.",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(redpanda_shadow_link_total_bytes_fetched, cluster)",
+        "query": {
+          "query": "label_values(redpanda_shadow_link_total_bytes_fetched, cluster)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "refresh": 2,
+        "sort": 1,
+        "hide": 0
+      },
+      {
         "name": "node",
         "label": "Node",
         "description": "Scrape targets that report shadow link metrics. For self-managed clusters each target is a broker. For Redpanda Cloud the target is the cluster's metrics endpoint; pick brokers with Exported node.",
@@ -832,9 +892,9 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(redpanda_shadow_link_total_bytes_fetched, instance)",
+        "definition": "label_values(redpanda_shadow_link_total_bytes_fetched{cluster=~\"$self_managed_cluster\"}, instance)",
         "query": {
-          "query": "label_values(redpanda_shadow_link_total_bytes_fetched, instance)",
+          "query": "label_values(redpanda_shadow_link_total_bytes_fetched{cluster=~\"$self_managed_cluster\"}, instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "includeAll": true,
@@ -880,36 +940,6 @@
         },
         "refresh": 2,
         "sort": 1
-      },
-      {
-        "name": "data_cluster",
-        "label": "Data cluster",
-        "description": "Redpanda Cloud cluster. Leave at All for self-managed clusters, whose metrics do not carry this label.",
-        "type": "query",
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(redpanda_cloud_data_cluster_name)",
-        "query": {
-          "query": "label_values(redpanda_cloud_data_cluster_name)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "includeAll": true,
-        "allValue": ".*",
-        "multi": true,
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "refresh": 2,
-        "sort": 1,
-        "hide": 0
       }
     ]
   },

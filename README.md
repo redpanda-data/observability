@@ -39,23 +39,27 @@ cross-cluster raft health, StretchCluster member status, and operator reconcile 
 `rpk generate grafana-dashboard --dashboard operations-stretch`; the operator metrics it visualizes are documented in the
 operator repository's [operator-metrics.md](https://github.com/redpanda-data/redpanda-operator/blob/main/docs/operator-metrics.md).
 
-### Monitoring several clusters from one Prometheus
-The Ops and Shadow Link dashboards group cluster-wide panels by a `cluster` label, which Redpanda does not emit itself.
-With one cluster per Prometheus data source nothing is needed. If one Prometheus scrapes several self-managed
-clusters, give each cluster's scrape target a distinct `cluster` label, as the [demo](demo/config/prometheus/prometheus.yml)
-does:
+### Choosing a cluster
+The Ops and Shadow Link dashboards have two cluster pickers, one per deployment type. Leave the one that does not
+apply to you at All (or empty, if it has no values).
 
-```yaml
-- job_name: redpanda
-  static_configs:
-  - targets:
-    - redpanda-0:9644
-    labels:
-      cluster: my-cluster
-```
+- **Cloud cluster**: for Redpanda Cloud. It filters on `redpanda_cloud_data_cluster_name`, which Redpanda Cloud adds
+  to its metrics, so it works with no setup.
+- **Self-managed cluster**: for self-managed clusters. It filters on a `cluster` label, which Redpanda does not emit
+  itself. With one cluster per Prometheus data source you can ignore it and switch clusters with the data source
+  picker. If one Prometheus scrapes several self-managed clusters, give each cluster's scrape targets a distinct
+  `cluster` label, as the [demo](demo/config/prometheus/prometheus.yml) does:
 
-Without it, cluster-wide panels combine every cluster. Redpanda Cloud metrics carry `redpanda_cloud_data_cluster_name`
-instead; select clusters with the Data cluster picker.
+  ```yaml
+  - job_name: redpanda
+    static_configs:
+    - targets:
+      - redpanda-0:9644
+      labels:
+        cluster: my-cluster
+  ```
+
+  Without the label the picker stays empty and cluster-wide panels combine every cluster.
 
 ## Screenshots
 ![](docs/images/Ops%20Dashboard.png)
