@@ -77,7 +77,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "(max by (cluster, shadow_link_name, state) (redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "expr": "(max by (cluster, shadow_link_name, state) (redpanda_shadow_link_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (up{instance=~\"$node\"})",
           "legendFormat": "{{shadow_link_name}}: {{state}}",
           "refId": "A",
           "instant": true
@@ -135,7 +135,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum by (status) (max by (cluster, shadow_link_name, status) (redpanda_shadow_link_shadow_topic_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})) > 0",
+          "expr": "sum by (status) (max by (cluster, shadow_link_name, status) (redpanda_shadow_link_shadow_topic_state{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) and on (cluster) group by (cluster) (up{instance=~\"$node\"})) > 0",
           "legendFormat": "{{status}}",
           "refId": "A",
           "instant": true
@@ -683,7 +683,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "(max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"})",
+          "expr": "(max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}) == 1) and on (cluster) group by (cluster) (up{instance=~\"$node\"})",
           "legendFormat": "{{shadow_link_name}}: {{phase}}",
           "refId": "A",
           "instant": true
@@ -751,7 +751,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "time() - (max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase_start_timestamp_seconds{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} > 0) and on (cluster) group by (cluster) (redpanda_application_uptime_seconds_total{instance=~\"$node\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"}))",
+          "expr": "time() - (max by (cluster, shadow_link_name, phase) (redpanda_shadow_link_failover_phase_start_timestamp_seconds{shadow_link_name=~\"$shadow_link\",redpanda_cloud_data_cluster_name=~\"$data_cluster\"} > 0) and on (cluster) group by (cluster) (up{instance=~\"$node\"}))",
           "legendFormat": "{{shadow_link_name}}: {{phase}}",
           "refId": "A",
           "instant": true
